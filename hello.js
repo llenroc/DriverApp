@@ -21,7 +21,7 @@ button.on("select", function() {
 
 var ttt = 0;
 
-setInterval(function(){ ttt+=1; label.set("text", ttt.toString()) }, 1000);
+//setInterval(function(){ ttt+=1; label.set("text", ttt.toString()) }, 1000);
 
 page.open();
 
