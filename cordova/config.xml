@@ -7,5 +7,5 @@
   <author email="dev@tabrisjs.com" href="https://tabrisjs.com">
    Tabris.js Team
   </author>
-  <gap:plugin name="https://github.com/Moussawi7/Cordova-GPSLocator" />
+  <plugin name="cordova-plugin-geolocation" version="1.0.0" />
 </widget>
