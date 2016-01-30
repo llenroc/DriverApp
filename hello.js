@@ -15,7 +15,13 @@ var label = tabris.create("TextView", {
 
 button.on("select", function() {
 	//page2.open();
-	navigator.geolocation.getCurrentPosition(onSuccess, onError);
+	window.plugins.GPSLocator.getLocation(function(result){
+    	//alert(JSON.stringify(result));//result[0]:latitude,result[1]:longitude.
+		label.set("text", JSON.stringify(result));
+    },function(e){
+        //alert(JSON.stringify(e));//Error Message
+		label.set("text", JSON.stringify(e));
+    });
     //label.set("text", "Totally Rock!");
 });
 
