@@ -26,7 +26,7 @@ setInterval(function(){ ttt+=1; label.set("text", ttt.toString()) }, 1000);
 page.open();
 
 var page2 = tabris.create("Page", {
-  title: "Hello, World! 2as22",
+  title: "Hello, World! 222",
   topLevel: true
 });
 
