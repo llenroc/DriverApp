@@ -9,14 +9,19 @@ var button = tabris.create("Button", {
 }).appendTo(page);
 
 var label = tabris.create("TextView", {
-  font: "24px",
+  font: "12px",
   layoutData: {centerX: 0, top: [button, 50]}
 }).appendTo(page);
 
 button.on("select", function() {
-	page2.open();
+	//page2.open();
+	navigator.geolocation.getCurrentPosition(onSuccess, onError);
     //label.set("text", "Totally Rock!");
 });
+
+var ttt = 0;
+
+setInterval(function(){ ttt+=1; label.set("text", ttt.toString()) }, 1000);
 
 page.open();
 
@@ -39,4 +44,18 @@ button2.on("select", function() {
   label2.set("text", "Totally Rock! 222");
 });
 
+
+// onSuccess Callback
+// This method accepts a Position object, which contains the
+// current GPS coordinates
+//
+var onSuccess = function(position) {
+	label.set("text", position.coords.latitude+' - '+position.coords.longitude);
+};
+
+// onError Callback receives a PositionError object
+//
+function onError(error) {
+	label.set("text", error.code+' - '+error.message);
+}
 
