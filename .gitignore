@@ -9,7 +9,7 @@ Desktop.ini
 $RECYCLE.BIN/
 
 # IGONERED FILES
-
+node_modules/
 
 # Windows Installer files
 *.cab
