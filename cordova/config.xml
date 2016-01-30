@@ -7,5 +7,9 @@
   <author email="dev@tabrisjs.com" href="https://tabrisjs.com">
    Tabris.js Team
   </author>
+<<<<<<< HEAD
   <plugin name="cordova-plugin-gpslocation" version="1.0.0" />
+=======
+  <gap:plugin name="https://github.com/Moussawi7/Cordova-GPSLocator" />
+>>>>>>> parent of c4e73d5... sas
 </widget>
