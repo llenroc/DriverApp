@@ -15,7 +15,7 @@ var label = tabris.create("TextView", {
 
 button.on("select", function() {
 	//page2.open();
-	cordova.plugins.geolocation.getCurrentPosition(onSuccess, onError);
+	GPSLocation.getCurrentPosition(onSuccess, onError);
     //label.set("text", "Totally Rock!");
 });
 
