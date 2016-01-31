@@ -10,17 +10,17 @@ var button = tabris.create("Button", {
 
 var button_1 = tabris.create("Button", {
   text: "Some action",
-  layoutData: {centerX: 0, top: 300}
+  layoutData: {centerX: 0, top: 150}
 }).appendTo(page);
 
 var button_2 = tabris.create("Button", {
   text: "Some action",
-  layoutData: {centerX: 0, top: 600}
+  layoutData: {centerX: 0, top: 200}
 }).appendTo(page);
 
 var button_3 = tabris.create("Button", {
   text: "Some more action",
-  layoutData: {centerX: 0, top: 900}
+  layoutData: {centerX: 0, top: 250}
 }).appendTo(page);
 
 
