@@ -18,7 +18,7 @@ tabris.create("Action", {
   title: "Settings",
   image: {src: "res/images/settings.png", scale: scaleFactor}
 }).on("select", function() {
-  //createSettingsPage().open();
+  openSettings();
 });
 
 
@@ -58,7 +58,7 @@ var label2 = tabris.create("TextView", {
 }).appendTo(mainPage);
 
 
-var page2 = tabris.create("Page", {
+var settingsPage = tabris.create("Page", {
   title: "Hello, World! 222",
   topLevel: true
 });
@@ -71,19 +71,27 @@ button.on("select", function() {
 	GPSLocation.getCurrentPosition(onSuccess, onError);
 });
 
-mainPage.on("swipe:left", function(widget, event) {
-  page2.open();
-});
 
-page2.on("swipe:right", function(widget, event) {
-  mainPage.open();
-});
+
+//mainPage.on("swipe:left", function(widget, event) {
+//  settingsPage.open();
+//});
+
+//settingsPage.on("swipe:right", function(widget, event) {
+//  mainPage.open();
+//});
 
 // End of event binding /////////////////////////////////////////////
 
 
 setInterval(function(){ myTimer+=1; label2.set("text", myTimer.toString()) }, 1000);
 
+
+function openSettings(){
+    
+    settingsPage.open();
+    
+}
 
 // onSuccess Callback
 // This method accepts a Position object, which contains the
