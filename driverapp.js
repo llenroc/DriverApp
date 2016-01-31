@@ -14,8 +14,17 @@ var mainPage = tabris.create("Page", {
     topLevel: true
 });
 
+tabris.create("Action", {
+  title: "Settings",
+  image: {src: "res/images/settings.png", scale: 3}
+}).on("select", function() {
+  //createSettingsPage().open();
+});
+
+
 var button = tabris.create("Button", {
   text: "Get LatLon",
+    background: "#fff",
   layoutData: {centerX: 0, top: 100}
 }).appendTo(mainPage);
 
