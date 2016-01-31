@@ -1,11 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.tabrisjs.getting.started" version="1.0.0">
-  <name>HelloWorld</name>
-  <description>
-   A sample Tabris.js application.
-  </description>
-  <author email="dev@tabrisjs.com" href="https://tabrisjs.com">
-   Tabris.js Team
-  </author>
+<widget id="DriverApp" version="1.0.0">
+    <name>DriverApp</name>
+    <description> Driver Tracking </description>
+    <author email="dev@tabrisjs.com" href="https://tabrisjs.com">
+        Tabris.js Team
+    </author>
+    <icon src="../res/images/car.png" />
   <plugin name="cordova-plugin-gpslocation" version="1.0.0" />
 </widget>
