@@ -1,10 +1,18 @@
+//Variables
+var touched = 0;
+var scaleFactor = tabris.device.get("scaleFactor"); //get device scale
+var myTimer = 0;
+
+
+// Object declarations ///////////////////////////////////////////////////
+
+
 var mainPage = tabris.create("Page", {
     title: "main page",
     background: "#fff",
     //image: "images/my-page.png",
     topLevel: true
 });
-
 
 var button = tabris.create("Button", {
   text: "Get LatLon",
@@ -17,7 +25,8 @@ var button_1 = tabris.create("Button", {
 }).appendTo(mainPage);
 
 
-var touched = 0;
+
+
 tabris.create("ImageView", {
   layoutData: {centerX: 0, centerY: 0, top: [label2,10]},
   image: {src: "res/images/car.png"},
@@ -27,11 +36,6 @@ tabris.create("ImageView", {
   mainPage.set("title", "touched " + touched + " times");
 }).appendTo(mainPage);
 
-
-
-
-
-var scaleFactor = tabris.device.get("scaleFactor");
 
 var label = tabris.create("TextView", {
   font: "12px",
@@ -45,6 +49,15 @@ var label2 = tabris.create("TextView", {
 }).appendTo(mainPage);
 
 
+var page2 = tabris.create("Page", {
+  title: "Hello, World! 222",
+  topLevel: true
+});
+
+// End of object declarations ///////////////////////////////////////
+
+//Event binding
+
 button.on("select", function() {
 	GPSLocation.getCurrentPosition(onSuccess, onError);
 });
@@ -53,18 +66,15 @@ mainPage.on("swipe:left", function(widget, event) {
   page2.open();
 });
 
-page2.on("swipe:left", function(widget, event) {
+page2.on("swipe:right", function(widget, event) {
   mainPage.open();
 });
 
-var ttt = 0;
+// End of event binding /////////////////////////////////////////////
 
-setInterval(function(){ ttt+=1; label2.set("text", ttt.toString()) }, 1000);
 
-var page2 = tabris.create("Page", {
-  title: "Hello, World! 222",
-  topLevel: true
-});
+setInterval(function(){ myTimer+=1; label2.set("text", ttt.toString()) }, 1000);
+
 
 // onSuccess Callback
 // This method accepts a Position object, which contains the
