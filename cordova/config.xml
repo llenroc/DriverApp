@@ -7,6 +7,6 @@
   <author email="dev@tabrisjs.com" href="https://tabrisjs.com">
    Tabris.js Team
   </author>
-    <icon src="res/images/car.png" />
+    <icon src="../res/images/car.png" />
   <plugin name="cordova-plugin-gpslocation" version="1.0.0" />
 </widget>
