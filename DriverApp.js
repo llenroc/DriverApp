@@ -1,5 +1,6 @@
 var page = tabris.create("Page", {
-    title: "Driver App",
+    title: "main page",
+    background: "red",
     //image: "images/my-page.png",
     topLevel: true
 });
@@ -24,10 +25,17 @@ var button_3 = tabris.create("Button", {
   layoutData: {centerX: 0, top: 250}
 }).appendTo(page);
 
+var scaleFactor = tabris.device.get("scaleFactor");
 
 var label = tabris.create("TextView", {
   font: "12px",
   layoutData: {centerX: 0, top: [button, 50]}
+}).appendTo(page);
+
+var label2 = tabris.create("TextView", {
+  font: "12px",
+    text : scaleFactor,
+  layoutData: {centerX: 0, top: [button_3, 50]}
 }).appendTo(page);
 
 button.on("select", function() {
@@ -50,7 +58,6 @@ var page2 = tabris.create("Page", {
   title: "Hello, World! 222",
   topLevel: true
 });
-
 
 // onSuccess Callback
 // This method accepts a Position object, which contains the
