@@ -22,6 +22,9 @@ tabris.create("Action", {
 });
 
 
+tabris.create("Drawer").append(tabris.create("PageSelector"));
+
+
 var button = tabris.create("Button", {
   text: "Get LatLon",
     background: "#fff",
@@ -71,15 +74,6 @@ button.on("select", function() {
 	GPSLocation.getCurrentPosition(onSuccess, onError);
 });
 
-
-
-//mainPage.on("swipe:left", function(widget, event) {
-//  settingsPage.open();
-//});
-
-//settingsPage.on("swipe:right", function(widget, event) {
-//  mainPage.open();
-//});
 
 // End of event binding /////////////////////////////////////////////
 
