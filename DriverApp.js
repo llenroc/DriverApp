@@ -8,6 +8,23 @@ var button = tabris.create("Button", {
   layoutData: {centerX: 0, top: 100}
 }).appendTo(page);
 
+var button_1 = tabris.create("Button", {
+  text: "Some action",
+  layoutData: {centerX: 0, top: 300}
+}).appendTo(page);
+
+var button_2 = tabris.create("Button", {
+  text: "Some action",
+  layoutData: {centerX: 0, top: 600}
+}).appendTo(page);
+
+var button_3 = tabris.create("Button", {
+  text: "Some more action",
+  layoutData: {centerX: 0, top: 900}
+}).appendTo(page);
+
+
+
 var label = tabris.create("TextView", {
   font: "12px",
   layoutData: {centerX: 0, top: [button, 50]}
