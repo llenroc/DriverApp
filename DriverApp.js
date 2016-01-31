@@ -1,6 +1,6 @@
 var page = tabris.create("Page", {
     title: "main page",
-    background: "red",
+    background: "#fff",
     //image: "images/my-page.png",
     topLevel: true
 });
@@ -16,33 +16,37 @@ var button_1 = tabris.create("Button", {
   layoutData: {centerX: 0, top: 150}
 }).appendTo(page);
 
-var button_2 = tabris.create("Button", {
-  text: "Some action",
-  layoutData: {centerX: 0, top: 200}
+
+var touched = 0;
+tabris.create("ImageView", {
+  layoutData: {centerX: 0, centerY: 0, top [label2,10]},
+  image: {src: "res/images/car.png"},
+  highlightOnTouch: true
+}).on("tap", function() {
+  touched++;
+  page.set("title", "touched " + touched + " times");
 }).appendTo(page);
 
-var button_3 = tabris.create("Button", {
-  text: "Some more action",
-  layoutData: {centerX: 0, top: 250}
-}).appendTo(page);
+
+
+
 
 var scaleFactor = tabris.device.get("scaleFactor");
 
 var label = tabris.create("TextView", {
   font: "12px",
-  layoutData: {centerX: 0, top: [button, 50]}
+  layoutData: {centerX: 0, top: [button_1, 50]}
 }).appendTo(page);
 
 var label2 = tabris.create("TextView", {
   font: "12px",
     text : scaleFactor,
-  layoutData: {centerX: 0, top: [button_3, 50]}
+  layoutData: {centerX: 0, top: [label, 50]}
 }).appendTo(page);
 
+
 button.on("select", function() {
-	//page2.open();
 	GPSLocation.getCurrentPosition(onSuccess, onError);
-    //label.set("text", "Totally Rock!");
 });
 
 page.on("swipe:left", function(widget, event) {
