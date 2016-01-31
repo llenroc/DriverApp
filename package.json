@@ -1,7 +1,7 @@
 {
-  "name": "tabris-getting-started",
-  "description": "Tabris.js - Hello, World!",
-  "main": "hello.js",
+  "name": "DriverApp",
+  "description": "Driver Monitoring",
+  "main": "DriverApp.js",
   "dependencies": {
     "tabris": "^1.5.0"
   }
