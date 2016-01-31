@@ -5,6 +5,7 @@ var page = tabris.create("Page", {
     topLevel: true
 });
 
+
 var button = tabris.create("Button", {
   text: "Get LatLon",
   layoutData: {centerX: 0, top: 100}
@@ -44,15 +45,13 @@ button.on("select", function() {
     //label.set("text", "Totally Rock!");
 });
 
-widget.on("swipe:left", function(widget, event) {
+page.on("swipe:left", function(widget, event) {
   page2.open();
 });
 
 //var ttt = 0;
 
 //setInterval(function(){ ttt+=1; label.set("text", ttt.toString()) }, 1000);
-
-page.open();
 
 var page2 = tabris.create("Page", {
   title: "Hello, World! 222",
@@ -73,3 +72,4 @@ function onError(error) {
 	label.set("text", error.code+' - '+error.message);
 }
 
+page.open();
