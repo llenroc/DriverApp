@@ -1,4 +1,4 @@
-var page = tabris.create("Page", {
+var mainPage = tabris.create("Page", {
     title: "main page",
     background: "#fff",
     //image: "images/my-page.png",
@@ -9,12 +9,12 @@ var page = tabris.create("Page", {
 var button = tabris.create("Button", {
   text: "Get LatLon",
   layoutData: {centerX: 0, top: 100}
-}).appendTo(page);
+}).appendTo(mainPage);
 
 var button_1 = tabris.create("Button", {
   text: "Some action",
   layoutData: {centerX: 0, top: 150}
-}).appendTo(page);
+}).appendTo(mainPage);
 
 
 var touched = 0;
@@ -24,8 +24,8 @@ tabris.create("ImageView", {
   highlightOnTouch: true
 }).on("tap", function() {
   touched++;
-  page.set("title", "touched " + touched + " times");
-}).appendTo(page);
+  mainPage.set("title", "touched " + touched + " times");
+}).appendTo(mainPage);
 
 
 
@@ -36,21 +36,25 @@ var scaleFactor = tabris.device.get("scaleFactor");
 var label = tabris.create("TextView", {
   font: "12px",
   layoutData: {centerX: 0, top: [button_1, 50]}
-}).appendTo(page);
+}).appendTo(mainPage);
 
 var label2 = tabris.create("TextView", {
   font: "12px",
     text : scaleFactor,
   layoutData: {centerX: 0, top: [label, 50]}
-}).appendTo(page);
+}).appendTo(mainPage);
 
 
 button.on("select", function() {
 	GPSLocation.getCurrentPosition(onSuccess, onError);
 });
 
-page.on("swipe:left", function(widget, event) {
+mainPage.on("swipe:left", function(widget, event) {
   page2.open();
+});
+
+page2.on("swipe:left", function(widget, event) {
+  mainPage.open();
 });
 
 //var ttt = 0;
@@ -76,4 +80,4 @@ function onError(error) {
 	label.set("text", error.code+' - '+error.message);
 }
 
-page.open();
+mainPage.open();
