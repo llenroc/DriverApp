@@ -9,7 +9,7 @@ var myTimer = 0;
 
 var mainPage = tabris.create("Page", {
     title: "main page",
-    background: "#fff",
+    background: "#204559",
     //image: "images/my-page.png",
     topLevel: true
 });
