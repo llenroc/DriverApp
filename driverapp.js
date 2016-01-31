@@ -16,7 +16,7 @@ var mainPage = tabris.create("Page", {
 
 tabris.create("Action", {
   title: "Settings",
-  image: {src: "res/images/settings.png", scale: 3}
+  image: {src: "res/images/settings.png", scale: scaleFactor}
 }).on("select", function() {
   //createSettingsPage().open();
 });
