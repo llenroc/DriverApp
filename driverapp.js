@@ -33,7 +33,7 @@ var button = tabris.create("Button", {
 
 var button_1 = tabris.create("Button", {
   text: "Some action",
-  layoutData: {centerX: 0, top: 150}
+  layoutData: {centerX: 0, top: [button, 5]}
 }).appendTo(mainPage);
 
 
@@ -51,20 +51,16 @@ tabris.create("ImageView", {
 
 var label = tabris.create("TextView", {
   font: "12px",
-  layoutData: {centerX: 0, top: [button_1, 50]}
+  layoutData: {centerX: 0, top: [button_1, 10]}
 }).appendTo(mainPage);
 
 var label2 = tabris.create("TextView", {
   font: "12px",
     text : scaleFactor,
-  layoutData: {centerX: 0, top: [label, 50]}
+  layoutData: {centerX: 0, top: [label, 20]}
 }).appendTo(mainPage);
 
 
-var settingsPage = tabris.create("Page", {
-  title: "Hello, World! 222",
-  topLevel: true
-});
 
 // End of object declarations ///////////////////////////////////////
 
@@ -83,9 +79,20 @@ setInterval(function(){ myTimer+=1; label2.set("text", myTimer.toString()) }, 10
 
 function openSettings(){
     
-    settingsPage.open();
+    createSettingsPage().open();
     
 }
+
+
+
+function createSettingsPage() {
+var settingsPage = tabris.create("Page", {
+  title: "Hello, World! 222",
+  topLevel: true
+}); 
+  return settingsPage;
+}
+
 
 // onSuccess Callback
 // This method accepts a Position object, which contains the
