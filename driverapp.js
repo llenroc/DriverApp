@@ -73,7 +73,7 @@ page2.on("swipe:right", function(widget, event) {
 // End of event binding /////////////////////////////////////////////
 
 
-setInterval(function(){ myTimer+=1; label2.set("text", ttt.toString()) }, 1000);
+setInterval(function(){ myTimer+=1; label2.set("text", myTimer.toString()) }, 1000);
 
 
 // onSuccess Callback
