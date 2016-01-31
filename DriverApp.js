@@ -19,7 +19,7 @@ var button_1 = tabris.create("Button", {
 
 var touched = 0;
 tabris.create("ImageView", {
-  layoutData: {centerX: 0, centerY: 0, top [label2,10]},
+  layoutData: {centerX: 0, centerY: 0, top: [label2,10]},
   image: {src: "res/images/car.png"},
   highlightOnTouch: true
 }).on("tap", function() {

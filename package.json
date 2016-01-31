@@ -1,7 +1,7 @@
 {
   "name": "DriverApp",
   "description": "Driver Tracking",
-  "main": "DriverApp.js",
+  "main": "driverapp.js",
   "dependencies": {
     "tabris": "^1.5.0"
   }
