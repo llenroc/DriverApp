@@ -75,7 +75,7 @@ tabris.create("TextView", {
 
 tabris.create("TextInput", {
   id: "CarID",
-  message: "
+  message: ""
 }).appendTo(settingsPage);
 
 tabris.create("TextView", {
