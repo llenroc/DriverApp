@@ -57,9 +57,9 @@ page2.on("swipe:left", function(widget, event) {
   mainPage.open();
 });
 
-//var ttt = 0;
+var ttt = 0;
 
-//setInterval(function(){ ttt+=1; label.set("text", ttt.toString()) }, 1000);
+setInterval(function(){ ttt+=1; label2.set("text", ttt.toString()) }, 1000);
 
 var page2 = tabris.create("Page", {
   title: "Hello, World! 222",
