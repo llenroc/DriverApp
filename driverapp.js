@@ -2,6 +2,9 @@
 var touched = 0;
 var scaleFactor = tabris.device.get("scaleFactor"); //get device scale
 var myTimer = 0;
+var screenWidth = window.screen.width;
+
+var halfscr = Math.round(screenWidth / 2);
 
 
 // Object declarations ///////////////////////////////////////////////////
@@ -9,33 +12,64 @@ var myTimer = 0;
 
 var mainPage = tabris.create("Page", {
     title: "main page",
-    background: "#204559",
+    background: "#fff",
     //image: "images/my-page.png",
     topLevel: true
 });
 
 
-tabris.create("Action", {
-  title: "Settings",
-  image: {src: "res/images/settings.png", scale: scaleFactor}
-}).on("select", function() {
+//tabris.create("Action", {
+//  title: "Settings",
+//  image: {src: "res/images/settings.png", scale: scaleFactor}
+//}).on("select", function() {
 
-});
+//});
+
+
+window.plugins.imei.get(
+  function(imei) {
+    console.log("got imei: " + imei);
+  },
+  function() {
+    console.log("error loading imei");
+  }
+);
 
 
 tabris.create("Drawer").append(tabris.create("PageSelector"));
 
 
 var button = tabris.create("Button", {
-  text: "Get LatLon",
-    background: "#fff",
-  layoutData: {centerX: 0, top: 100}
+    id: "buttonFree",
+    class : "statusBtns",
+    text: "თავისუფალი"    
 }).appendTo(mainPage);
 
 var button_1 = tabris.create("Button", {
-  text: "Some action",
-  layoutData: {centerX: 0, top: [button, 5]}
+    id: "buttonOnWay",
+    class : "statusBtns",
+    text: "გზაში"
 }).appendTo(mainPage);
+
+var button_2 = tabris.create("Button", {
+    id: "buttonBusy",
+    class : "statusBtns",
+    text: "დაკავებული"
+}).appendTo(mainPage);
+
+var button_3 = tabris.create("Button", {
+    id: "buttonOffduty",
+    class : "statusBtns",
+    text: "შესვენება"
+}).appendTo(mainPage);
+
+
+mainPage.apply({
+  "#buttonFree": {layoutData: {left: 0, height : 100, bottom : 0, width :  halfscr}, background: "#2edc5f", alignment: "center"},
+  "#buttonOnWay": {layoutData: {left: "#buttonFree -5", right : 0, baseline: "#buttonFree", height : 100, width :  halfscr}, background: "#dfb72d", alignment: "center"},
+  "#buttonBusy": {layoutData: {left: 0, bottom: "#buttonFree -10", height : 100, width :  halfscr}, background: "#d02e2e", alignment: "center"},
+  "#buttonOffduty": {layoutData: {left: "#buttonBusy -5", right : 0, baseline: "#buttonBusy", height : 100, width :  halfscr}, background: "#bababa", alignment: "center"}
+});
 
 
 
@@ -56,14 +90,16 @@ var label = tabris.create("TextView", {
 
 var label2 = tabris.create("TextView", {
   font: "12px",
-    text : scaleFactor,
+    text : "",
   layoutData: {centerX: 0, top: [label, 20]}
 }).appendTo(mainPage);
 
 
+
+
 var settingsPage = tabris.create("Page", {
-  title: "Configuretion",
-    background: "blue",
+  title: "Configuration",
+    background: "#fff",
   topLevel: true
 }); 
 
@@ -105,7 +141,7 @@ settingsPage.apply({
   "#CarID": {layoutData: {left: "#carIDLabel 10", right: 10, baseline: "#carIDLabel"}},
   "#pass": {layoutData: {left: 10, top: "#CarID 18", width: 120}},
   "#passInput": {layoutData: {left: "#pass 10", right: 10, baseline: "#pass"}},
-  "#done": {layoutData: {left: 10, right: 10, top: "#passInput 18"}}
+  "#done": {layoutData: {left: 10, right: 10, top: "#passInput 58"}}
 });
 
 
@@ -117,6 +153,26 @@ function populateMessage() {
 // End of object declarations ///////////////////////////////////////
 
 //Event binding
+
+
+//Override native back button action
+tabris.app.on("backnavigation", function(app, options) {
+  //options.preventDefault = true;
+  // do something else than closing the page
+});
+
+
+
+tabris.device.on("change:orientation", function(device, orientation) {
+  
+    //Align button equaly on center depending on device screen width and orientation
+    screenWidth = window.screen.width;
+    halfscr = Math.round(screenWidth / 2);    
+    mainPage.apply({".statusBtns": {width: halfscr}});
+    
+});
+
+
 
 button.on("select", function() {
 	GPSLocation.getCurrentPosition(onSuccess, onError);
