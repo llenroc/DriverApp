@@ -26,16 +26,6 @@ var mainPage = tabris.create("Page", {
 //});
 
 
-window.plugins.imei.get(
-  function(imei) {
-    console.log("got imei: " + imei);
-  },
-  function() {
-    console.log("error loading imei");
-  }
-);
-
-
 tabris.create("Drawer").append(tabris.create("PageSelector"));
 
 
