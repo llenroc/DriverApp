@@ -2,21 +2,32 @@
 var touched = 0;
 var scaleFactor = tabris.device.get("scaleFactor"); //get device scale
 var myTimer = 0;
-var screenWidth = window.screen.width;
 
-var halfscr = Math.round(screenWidth / 2);
+var carID;
 
 
 // Object declarations ///////////////////////////////////////////////////
 
 
 var mainPage = tabris.create("Page", {
-    title: "main page",
-    background: "#fff",
+    title: "მთავარი",
+    background: "#000",
     //image: "images/my-page.png",
     topLevel: true
 });
 
+
+var settingsPage = tabris.create("Page", {
+  title: "პარამეტრები",
+    background: "#000",
+  topLevel: true
+}); 
+
+var updatePage = tabris.create("Page", {
+    title: "პროგრამის განახლება",
+    background: "#000",
+    topLevel: true
+}); 
 
 //tabris.create("Action", {
 //  title: "Settings",
@@ -54,15 +65,6 @@ var button_3 = tabris.create("Button", {
 }).appendTo(mainPage);
 
 
-mainPage.apply({
-  "#buttonFree": {layoutData: {left: 0, height : 100, bottom : 0, width :  halfscr}, background: "#2edc5f", alignment: "center"},
-  "#buttonOnWay": {layoutData: {left: "#buttonFree -5", right : 0, baseline: "#buttonFree", height : 100, width :  halfscr}, background: "#dfb72d", alignment: "center"},
-  "#buttonBusy": {layoutData: {left: 0, bottom: "#buttonFree -10", height : 100, width :  halfscr}, background: "#d02e2e", alignment: "center"},
-  "#buttonOffduty": {layoutData: {left: "#buttonBusy -5", right : 0, baseline: "#buttonBusy", height : 100, width :  halfscr}, background: "#bababa", alignment: "center"}
-});
-
-
-
 tabris.create("ImageView", {
   layoutData: {centerX: 0, centerY: 0, top: [label2,10]},
   image: {src: "res/images/car.png"},
@@ -74,57 +76,83 @@ tabris.create("ImageView", {
 
 
 var label = tabris.create("TextView", {
-  font: "12px",
+    font: "12px",
+    textColor : "#fff",
   layoutData: {centerX: 0, top: [button_1, 10]}
 }).appendTo(mainPage);
 
 var label2 = tabris.create("TextView", {
   font: "12px",
+    textColor : "#fff",
     text : "",
   layoutData: {centerX: 0, top: [label, 20]}
+}).appendTo(mainPage);
+
+var testLabel = tabris.create("TextView", {
+  font: "25px",
+    textColor : "#fff",
+    text : "სტატუსი",
+  layoutData: {centerX: 0, top: [label2, 20]}
+}).appendTo(mainPage);
+
+
+
+var carIDLabel = tabris.create("TextView",{
+    font : "22px",
+    textColor : "#fff",    
+    background : "red",
+    text : "მანქანა ნომერი #",
+    layoutData : {left : 5, top : 5, height : 30 }
 }).appendTo(mainPage);
 
 
 
 
-var settingsPage = tabris.create("Page", {
-  title: "Configuration",
-    background: "#fff",
-  topLevel: true
-}); 
-
 tabris.create("TextView", {
-  id: "carIDLabel",
-  alignment: "left",
-  text: "Enter Car ID:"
+    id: "carIDLabel",
+    alignment: "left",
+    textColor : "#fff",
+    text: "მანქანის ნომერი:"
 }).appendTo(settingsPage);
 
 tabris.create("TextInput", {
-  id: "CarID",
-  message: ""
+    id: "CarID",
+    textColor : "#fff",
+    message: ""
 }).appendTo(settingsPage);
 
 tabris.create("TextView", {
-  id: "pass",
-  text: "Enter Password:"
+    id: "pass",
+    textColor : "#fff",
+    text: "პაროლი:"
 }).appendTo(settingsPage);
 
 tabris.create("TextInput", {
-  id: "passInput",
-  type: "password",
-  message: ""
+    id: "passInput",
+    textColor : "#fff",
+    type: "password",
+    message: ""
 }).appendTo(settingsPage);
 
 
 tabris.create("Button", {
   id: "done",
-  text: "Change Car ID",
+  text: "დამახსოვრება",
   background: "#8b0000",
   textColor: "white"
 }).on("select", function() {
   populateMessage();
 }).appendTo(settingsPage);
 
+
+//Page styling /////////////
+
+mainPage.apply({
+  "#buttonFree": {layoutData: {left: 0, height : buttonHeight(), bottom : 0, width :  buttonWidth()}, background: "#2edc5f", alignment: "center", border : "#d02e2e"},
+  "#buttonOnWay": {layoutData: {left: "#buttonFree -5", right : 0, baseline: "#buttonFree", height : buttonHeight(), width :  buttonWidth()}, background: "#dfb72d", alignment: "center"},
+  "#buttonBusy": {layoutData: {left: 0, bottom: "#buttonFree -10", height : buttonHeight(), width :  buttonWidth()}, background: "#d02e2e", alignment: "center"},
+  "#buttonOffduty": {layoutData: {left: "#buttonBusy -5", right : 0, baseline: "#buttonBusy", height : buttonHeight(), width :  buttonWidth()}, background: "#bababa", alignment: "center"}
+});
 
 settingsPage.apply({
   "#carIDLabel": {layoutData: {left: 10, top: 18, width: 120}},
@@ -135,6 +163,8 @@ settingsPage.apply({
 });
 
 
+//End of Page styling /////////////
+
 function populateMessage() {
 
 }
@@ -142,7 +172,9 @@ function populateMessage() {
 
 // End of object declarations ///////////////////////////////////////
 
-//Event binding
+
+
+//Event binding //////////////////
 
 
 //Override native back button action
@@ -153,19 +185,29 @@ tabris.app.on("backnavigation", function(app, options) {
 
 
 
+function buttonWidth(){    
+    var screenWidth = window.screen.width;
+    return Math.round(screenWidth / 2);    
+}
+
+function buttonHeight(){    
+    var screenHeight = window.screen.height;
+    return Math.round((screenHeight / 3)/2);  
+}
+
 tabris.device.on("change:orientation", function(device, orientation) {
   
     //Align button equaly on center depending on device screen width and orientation
-    screenWidth = window.screen.width;
-    halfscr = Math.round(screenWidth / 2);    
-    mainPage.apply({".statusBtns": {width: halfscr}});
-    
+    mainPage.apply({".statusBtns": {width: buttonWidth()}});
+    mainPage.apply({".statusBtns": {height: buttonHeight()}});    
 });
 
 
 
-button.on("select", function() {
-	GPSLocation.getCurrentPosition(onSuccess, onError);
+tabris.ui.find(".statusBtns").on("select", function() {
+	
+    testLabel.set("text", this.id)
+    
 });
 
 
@@ -174,7 +216,7 @@ button.on("select", function() {
 
 setInterval(function(){ 
     myTimer+=1; label2.set("text", myTimer.toString())
-    GPSLocation.getCurrentPosition(onSuccess, onError);
+    //GPSLocation.getCurrentPosition(onSuccess, onError);
 }, 1000);
 
 
@@ -193,4 +235,5 @@ function onError(error) {
 	label.set("text", error.code+' - '+error.message);
 }
 
-mainPage.open();
+if (carID) {mainPage.open()}
+else settingsPage.open();
