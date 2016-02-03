@@ -96,14 +96,12 @@ var testLabel = tabris.create("TextView", {
 }).appendTo(mainPage);
 
 
-
 var carIDLabel = tabris.create("TextView",{
     id : "carIDLabel",
-    font : "22px",
+    font : "50px",
     textColor : "#fff",    
-    background : "red",
-    text : "მანქანა ნომერი #",
-    layoutData : {left : 5, top : 5, height : 30 }
+    text : "",
+    layoutData : {top : 5, centerX: 0}
 }).appendTo(mainPage);
 
 
@@ -111,7 +109,6 @@ var carIDLabel = tabris.create("TextView",{
 
 var carIDInputLabel = tabris.create("TextView", {
     id: "carIDInputLabel",
-    alignment: "left",
     textColor : "#fff",
     text: "მანქანის ნომერი:"
 }).appendTo(settingsPage);
@@ -150,10 +147,10 @@ var removeBtn = tabris.create("Button", {
 //Page styling /////////////
 
 mainPage.apply({
-  "#buttonFree": {layoutData: {left: 0, height : buttonHeight(), bottom : 0, width :  buttonWidth()}, background: "#2edc5f", alignment: "center", textColor : "#d02e2e"},
-  "#buttonOnWay": {layoutData: {left: "#buttonFree -5", right : 0, baseline: "#buttonFree", height : buttonHeight(), width :  buttonWidth()}, background: "#dfb72d", alignment: "center"},
-  "#buttonBusy": {layoutData: {left: 0, bottom: "#buttonFree -10", height : buttonHeight(), width :  buttonWidth()}, background: "#d02e2e", alignment: "center"},
-  "#buttonOffduty": {layoutData: {left: "#buttonBusy -5", right : 0, baseline: "#buttonBusy", height : buttonHeight(), width :  buttonWidth()}, background: "#bababa", alignment: "center"}
+    "#buttonFree": {layoutData: {left: 0, height : buttonHeight(), bottom : 0, width :  buttonWidth()}, background: "#2edc5f", alignment: "center", textColor : "#d02e2e"},
+    "#buttonOnWay": {layoutData: {left: "#buttonFree -5", right : 0, baseline: "#buttonFree", height : buttonHeight(), width :  buttonWidth()}, background: "#dfb72d", alignment: "center"},
+    "#buttonBusy": {layoutData: {left: 0, bottom: "#buttonFree -10", height : buttonHeight(), width :  buttonWidth()}, background: "#d02e2e", alignment: "center"},
+    "#buttonOffduty": {layoutData: {left: "#buttonBusy -5", right : 0, baseline: "#buttonBusy", height : buttonHeight(), width :  buttonWidth()}, background: "#bababa", alignment: "center"},
 });
 
 settingsPage.apply({
@@ -214,14 +211,15 @@ tabris.ui.find(".statusBtns").on("select", function() {
 
 submitBtn.on("select", function(){    
     myStorage.setItem("CarID",carIDInput.get("text"));
-    carIDLabel.set("text", carIDInput.get("text"))
+    carIDLabel.set("text", "#" + carIDInput.get("text"))
     carIDInput.set("text", "");
+    mainPage.open();
 });
 
 removeBtn.on("select", function(){    
     //carIDInput.set("text", localStorage.getItem("CarID"));
-    localStorage.removeItem("carID");
-    carIDLabel.set("text", "შეიყვანეთ მანქანის ნომერი");
+    myStorage.removeItem("CarID");
+    carIDLabel.set("text", "#?");
 });
 
 // End of event binding /////////////////////////////////////////////
@@ -252,13 +250,13 @@ carID = localStorage.getItem("CarID");
 
 if (carID) {
     
-    carIDLabel.set("text", carID);
+    carIDLabel.set("text", "#" + carID);
     mainPage.open();
 
 }
 else {
 
-    carIDLabel.set("text", "შეიყვანეთ მანქანის ნომერი");
+    carIDLabel.set("text", "#?");
     settingsPage.open()
 
 };
