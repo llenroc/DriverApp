@@ -1,10 +1,10 @@
 //Variables
 var touched = 0;
-var scaleFactor = tabris.device.get("scaleFactor"); //get device scale
 var myTimer = 0;
 
 var carID;
 
+var myStorage = localStorage;
 
 // Object declarations ///////////////////////////////////////////////////
 
@@ -18,9 +18,9 @@ var mainPage = tabris.create("Page", {
 
 
 var settingsPage = tabris.create("Page", {
-  title: "პარამეტრები",
+    title: "პარამეტრები",
     background: "#000",
-  topLevel: true
+    topLevel: true
 }); 
 
 var updatePage = tabris.create("Page", {
@@ -98,6 +98,7 @@ var testLabel = tabris.create("TextView", {
 
 
 var carIDLabel = tabris.create("TextView",{
+    id : "carIDLabel",
     font : "22px",
     textColor : "#fff",    
     background : "red",
@@ -108,14 +109,14 @@ var carIDLabel = tabris.create("TextView",{
 
 
 
-tabris.create("TextView", {
-    id: "carIDLabel",
+var carIDInputLabel = tabris.create("TextView", {
+    id: "carIDInputLabel",
     alignment: "left",
     textColor : "#fff",
     text: "მანქანის ნომერი:"
 }).appendTo(settingsPage);
 
-tabris.create("TextInput", {
+var carIDInput = tabris.create("TextInput", {
     id: "CarID",
     textColor : "#fff",
     message: ""
@@ -135,31 +136,33 @@ tabris.create("TextInput", {
 }).appendTo(settingsPage);
 
 
-tabris.create("Button", {
-  id: "done",
-  text: "დამახსოვრება",
-  background: "#8b0000",
-  textColor: "white"
-}).on("select", function() {
-  populateMessage();
+var submitBtn = tabris.create("Button", {
+  id: "setId",
+  text: "დამახსოვრება"
+}).appendTo(settingsPage);
+
+var removeBtn = tabris.create("Button", {
+  id: "clearId",
+  text: "განულება"
 }).appendTo(settingsPage);
 
 
 //Page styling /////////////
 
 mainPage.apply({
-  "#buttonFree": {layoutData: {left: 0, height : buttonHeight(), bottom : 0, width :  buttonWidth()}, background: "#2edc5f", alignment: "center", border : "#d02e2e"},
+  "#buttonFree": {layoutData: {left: 0, height : buttonHeight(), bottom : 0, width :  buttonWidth()}, background: "#2edc5f", alignment: "center", textColor : "#d02e2e"},
   "#buttonOnWay": {layoutData: {left: "#buttonFree -5", right : 0, baseline: "#buttonFree", height : buttonHeight(), width :  buttonWidth()}, background: "#dfb72d", alignment: "center"},
   "#buttonBusy": {layoutData: {left: 0, bottom: "#buttonFree -10", height : buttonHeight(), width :  buttonWidth()}, background: "#d02e2e", alignment: "center"},
   "#buttonOffduty": {layoutData: {left: "#buttonBusy -5", right : 0, baseline: "#buttonBusy", height : buttonHeight(), width :  buttonWidth()}, background: "#bababa", alignment: "center"}
 });
 
 settingsPage.apply({
-  "#carIDLabel": {layoutData: {left: 10, top: 18, width: 120}},
-  "#CarID": {layoutData: {left: "#carIDLabel 10", right: 10, baseline: "#carIDLabel"}},
-  "#pass": {layoutData: {left: 10, top: "#CarID 18", width: 120}},
-  "#passInput": {layoutData: {left: "#pass 10", right: 10, baseline: "#pass"}},
-  "#done": {layoutData: {left: 10, right: 10, top: "#passInput 58"}}
+  "#carIDInputLabel": {layoutData: {left: 10, top: 18, width: 150}},
+  "#CarID": {layoutData: {left: "#carIDInputLabel 10", right: 10, baseline: "#carIDInputLabel"}, background : "#fff"},
+  "#pass": {layoutData: {left: 10, top: "#CarID 18", width: 150}},
+  "#passInput": {layoutData: {left: "#pass 10", right: 10, baseline: "#pass"}, background : "#fff"},
+  "#setId": {layoutData: {left: 10, right: 10, top: "#passInput 58", height : 60}, background: "#424242", textColor: "white"},
+  "#clearId": {layoutData: {left: 10, right: 10, top: "#setId 5", height : 60}, background: "#424242", textColor: "white"},   
 });
 
 
@@ -204,19 +207,29 @@ tabris.device.on("change:orientation", function(device, orientation) {
 
 
 
-tabris.ui.find(".statusBtns").on("select", function() {
-	
-    testLabel.set("text", this.id)
-    
+tabris.ui.find(".statusBtns").on("select", function() {	
+    testLabel.set("text", this.id)    
 });
 
+
+submitBtn.on("select", function(){    
+    myStorage.setItem("CarID",carIDInput.get("text"));
+    carIDLabel.set("text", carIDInput.get("text"))
+    carIDInput.set("text", "");
+});
+
+removeBtn.on("select", function(){    
+    //carIDInput.set("text", localStorage.getItem("CarID"));
+    localStorage.removeItem("carID");
+    carIDLabel.set("text", "შეიყვანეთ მანქანის ნომერი");
+});
 
 // End of event binding /////////////////////////////////////////////
 
 
 setInterval(function(){ 
     myTimer+=1; label2.set("text", myTimer.toString())
-    //GPSLocation.getCurrentPosition(onSuccess, onError);
+    GPSLocation.getCurrentPosition(onSuccess, onError);
 }, 1000);
 
 
@@ -235,5 +248,17 @@ function onError(error) {
 	label.set("text", error.code+' - '+error.message);
 }
 
-if (carID) {mainPage.open()}
-else settingsPage.open();
+carID = localStorage.getItem("CarID");
+
+if (carID) {
+    
+    carIDLabel.set("text", carID);
+    mainPage.open();
+
+}
+else {
+
+    carIDLabel.set("text", "შეიყვანეთ მანქანის ნომერი");
+    settingsPage.open()
+
+};
