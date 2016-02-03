@@ -147,10 +147,10 @@ var removeBtn = tabris.create("Button", {
 //Page styling /////////////
 
 mainPage.apply({
-    "#buttonFree": {layoutData: {left: 0, height : buttonHeight(), bottom : 0, width :  buttonWidth()}, background: "#2edc5f", alignment: "center", textColor : "#d02e2e"},
-    "#buttonOnWay": {layoutData: {left: "#buttonFree -5", right : 0, baseline: "#buttonFree", height : buttonHeight(), width :  buttonWidth()}, background: "#dfb72d", alignment: "center"},
-    "#buttonBusy": {layoutData: {left: 0, bottom: "#buttonFree -10", height : buttonHeight(), width :  buttonWidth()}, background: "#d02e2e", alignment: "center"},
-    "#buttonOffduty": {layoutData: {left: "#buttonBusy -5", right : 0, baseline: "#buttonBusy", height : buttonHeight(), width :  buttonWidth()}, background: "#bababa", alignment: "center"},
+    "#buttonFree": {layoutData: {left: 0, height : buttonHeight(), bottom : 0, width :  buttonWidth()}, background: "#2edc5f", alignment: "center", textColor : "#fff"},
+    "#buttonOnWay": {layoutData: {left: "#buttonFree -5", right : 0, baseline: "#buttonFree", height : buttonHeight(), width :  buttonWidth()}, background: "#dfb72d", alignment: "center", opacity: 0.4},
+    "#buttonBusy": {layoutData: {left: 0, bottom: "#buttonFree -10", height : buttonHeight(), width :  buttonWidth()}, background: "#d02e2e", alignment: "center", textColor : "#fff", opacity: 0.4},
+    "#buttonOffduty": {layoutData: {left: "#buttonBusy -5", right : 0, baseline: "#buttonBusy", height : buttonHeight(), width :  buttonWidth()}, background: "#bababa", alignment: "center", opacity: 0.4},
 });
 
 settingsPage.apply({
@@ -158,8 +158,8 @@ settingsPage.apply({
   "#CarID": {layoutData: {left: "#carIDInputLabel 10", right: 10, baseline: "#carIDInputLabel"}, background : "#fff"},
   "#pass": {layoutData: {left: 10, top: "#CarID 18", width: 150}},
   "#passInput": {layoutData: {left: "#pass 10", right: 10, baseline: "#pass"}, background : "#fff"},
-  "#setId": {layoutData: {left: 10, right: 10, top: "#passInput 58", height : 60}, background: "#424242", textColor: "white"},
-  "#clearId": {layoutData: {left: 10, right: 10, top: "#setId 5", height : 60}, background: "#424242", textColor: "white"},   
+  "#setId": {layoutData: {left: 5, top: "#passInput 58", height : 60, width :  buttonWidth()}, background: "#424242", textColor: "white"},
+  "#clearId": {layoutData: {left: buttonWidth(), height : 60,  baseline: "#setId", width :  buttonWidth()}, background: "#424242", textColor: "white"},   
 });
 
 
@@ -205,7 +205,11 @@ tabris.device.on("change:orientation", function(device, orientation) {
 
 
 tabris.ui.find(".statusBtns").on("select", function() {	
-    testLabel.set("text", this.id)    
+    testLabel.set("text", this.id);
+    
+    tabris.ui.find(".statusBtns").set("opacity", 0.4);
+    this.set("opacity", 1);
+    
 });
 
 
