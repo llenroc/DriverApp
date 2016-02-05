@@ -196,7 +196,7 @@ function buttonHeight(){
 }
 
 tabris.device.on("change:orientation", function(device, orientation) {
-  
+  	window.plugins.insomnia.keepAwake();
     //Align button equaly on center depending on device screen width and orientation
     mainPage.apply({".statusBtns": {width: buttonWidth()}});
     mainPage.apply({".statusBtns": {height: buttonHeight()}});    
