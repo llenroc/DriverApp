@@ -1,19 +1,16 @@
 //Variables
 var touched = 0;
 var myTimer = 0;
-
 var carID;
-
 var myStorage = localStorage;
 
 
 
+//On Ready
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady(){
-
-    window.plugins.insomnia.keepAwake()
-    
+    window.plugins.insomnia.keepAwake()    
 }
 
 
@@ -29,7 +26,6 @@ var mainPage = tabris.create("Page", {
     //image: "images/my-page.png",
     topLevel: true
 });
-
 
 var settingsPage = tabris.create("Page", {
     title: "პარამეტრები",
@@ -49,9 +45,6 @@ var updatePage = tabris.create("Page", {
 //}).on("select", function() {
 
 //});
-
-
-
 
 tabris.create("Drawer").append(tabris.create("PageSelector"));
 
@@ -225,11 +218,9 @@ tabris.device.on("change:orientation", function(device, orientation) {
 
 
 tabris.ui.find(".statusBtns").on("touchstart", function(widget) {	
-    //testLabel.set("text", this.id);
-    
+    testLabel.set("text", this.id);    
     tabris.ui.find(".statusBtns").set("opacity", 0.5);
-    this.set("opacity", 1);
-    
+    this.set("opacity", 1);    
 });
 
 
@@ -251,7 +242,7 @@ removeBtn.on("select", function(){
 
 setInterval(function(){ 
     myTimer+=1; label2.set("text", myTimer.toString())
-    //GPSLocation.getCurrentPosition(onSuccess, onError);
+    GPSLocation.getCurrentPosition(onSuccess, onError);
 }, 1000);
 
 
