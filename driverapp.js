@@ -209,10 +209,6 @@ tabris.device.on("change:orientation", function(device, orientation) {
     //Align button equaly on center depending on device screen width and orientation
     mainPage.apply({".statusBtns": {width: buttonWidth()}});
     mainPage.apply({".statusBtns": {height: buttonHeight()}});   
-    
-    updatePage.apply({".statusBtns": {width: buttonWidth()}});
-    updatePage.apply({".statusBtns": {height: buttonHeight()}});      
-    
 });
 
 
