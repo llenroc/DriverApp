@@ -56,52 +56,6 @@ var updatePage = tabris.create("Page", {
 tabris.create("Drawer").append(tabris.create("PageSelector"));
 
 
-var button_free = tabris.create("Composite", { id : "button_free", class: "statusBtns",}).appendTo(updatePage);
-var button_free_sub1 = tabris.create("Composite", { id : "button_free_sub1"}).appendTo(button_free);
-var button_free_sub2 = tabris.create("Composite", { id : "button_free_sub2", class : "sub2"}).appendTo(button_free_sub1);
-var button_free_text = tabris.create("TextView", {
-    text: "თავისუფალი",
-    font: "bold 16px",
-    textColor: "#fff",
-    layoutData: {centerX: 0, centerY: 0}
-}).appendTo(button_free_sub2);
-
-
-var button_onway = tabris.create("Composite", { id : "button_onway", class: "statusBtns",}).appendTo(updatePage);
-var button_onway_sub1 = tabris.create("Composite", { id : "button_onway_sub1"}).appendTo(button_onway);
-var button_onway_sub2 = tabris.create("Composite", { id : "button_onway_sub2", class : "sub2"}).appendTo(button_onway_sub1);
-var button_onway_text = tabris.create("TextView", {
-    text: "გზაში",
-    font: "bold 16px",
-    textColor: "#fff",
-    layoutData: {centerX: 0, centerY: 0}
-}).appendTo(button_onway_sub2);
-
-
-var button_busy = tabris.create("Composite", { id : "button_busy", class: "statusBtns",}).appendTo(updatePage);
-var button_busy_sub1 = tabris.create("Composite", { id : "button_busy_sub1"}).appendTo(button_busy);
-var button_busy_sub2 = tabris.create("Composite", { id : "button_busy_sub2", class : "sub2"}).appendTo(button_busy_sub1);
-var button_busy_text = tabris.create("TextView", {
-    text: "დაკავებული",
-    font: "bold 16px",
-    textColor: "#fff",
-    layoutData: {centerX: 0, centerY: 0}
-}).appendTo(button_busy_sub2);
-
-
-var button_offduty = tabris.create("Composite", { id : "button_offduty", class: "statusBtns",}).appendTo(updatePage);
-var button_offduty_sub1 = tabris.create("Composite", { id : "button_offduty_sub1"}).appendTo(button_offduty);
-var button_offduty_sub2 = tabris.create("Composite", { id : "button_offduty_sub2", class : "sub2"}).appendTo(button_offduty_sub1);
-var button_offduty_text = tabris.create("TextView", {
-    text: "შესვენება",
-    font: "bold 16px",
-    textColor: "#fff",
-    layoutData: {centerX: 0, centerY: 0}
-}).appendTo(button_offduty_sub2);
-
-
-
-
 var button = tabris.create("Button", {
     id: "buttonFree",
     class : "statusBtns",
@@ -210,9 +164,9 @@ var removeBtn = tabris.create("Button", {
 
 mainPage.apply({
     "#buttonFree": {layoutData: {left: 0, height : buttonHeight(), bottom : 0, width :  buttonWidth()}, background: "#2edc5f", alignment: "center", textColor : "#fff"},
-    "#buttonOnWay": {layoutData: {left: "#buttonFree -5", right : 0, baseline: "#buttonFree", height : buttonHeight(), width :  buttonWidth()}, background: "#dfb72d", alignment: "center", opacity: 0.4},
-    "#buttonBusy": {layoutData: {left: 0, bottom: "#buttonFree -10", height : buttonHeight(), width :  buttonWidth()}, background: "#d02e2e", alignment: "center", textColor : "#fff", opacity: 0.4},
-    "#buttonOffduty": {layoutData: {left: "#buttonBusy -5", right : 0, baseline: "#buttonBusy", height : buttonHeight(), width :  buttonWidth()}, background: "#bababa", alignment: "center", opacity: 0.4},
+    "#buttonOnWay": {layoutData: {left: "#buttonFree -5", right : 0, baseline: "#buttonFree", height : buttonHeight(), width :  buttonWidth()}, background: "#dfb72d", alignment: "center", opacity: 0.5},
+    "#buttonBusy": {layoutData: {left: 0, bottom: "#buttonFree -10", height : buttonHeight(), width :  buttonWidth()}, background: "#d02e2e", alignment: "center", textColor : "#fff", opacity: 0.5},
+    "#buttonOffduty": {layoutData: {left: "#buttonBusy -5", right : 0, baseline: "#buttonBusy", height : buttonHeight(), width :  buttonWidth()}, background: "#bababa", alignment: "center", opacity: 0.5},
 });
 
 settingsPage.apply({
@@ -222,27 +176,6 @@ settingsPage.apply({
   "#passInput": {layoutData: {left: "#pass 10", right: 10, baseline: "#pass"}, background : "#fff"},
   "#setId": {layoutData: {left: 5, top: "#passInput 58", height : 60, width :  buttonWidth()}, background: "#424242", textColor: "white"},
   "#clearId": {layoutData: {left: buttonWidth(), height : 60,  baseline: "#setId", width :  buttonWidth()}, background: "#424242", textColor: "white"},   
-});
-
-
-updatePage.apply({
-    "#button_free": {layoutData: {left: 0, height : buttonHeight(), bottom : 0, width :  buttonWidth()}, background: "#2edc5f", alignment: "center"},
-    "#button_free_sub1": { layoutData: {left: "#button_free 3", top: "#button_free 3", bottom: "#button_free 3", right: "#button_free 3"}, background: "#000"},
-    "#button_free_sub2": {layoutData: {left: "#button_free_sub1 3", top: "#button_free_sub1 3", bottom: "#button_free_sub1 3", right: "#button_free_sub1 3"}, background: "#2edc5f"},    
-    
-    "#button_onway": {layoutData: {left: "#button_free", right : 0, bottom : 0, height : buttonHeight(), width :  buttonWidth()}, background: "#dfb72d", alignment: "center"},
-    "#button_onway_sub1": { layoutData: {left: "#button_onway 3", top: "#button_onway 3", bottom: "#button_onway 3", right: "#button_onway 3"}, background: "#000"},
-    "#button_onway_sub2": {layoutData: {left: "#button_onway_sub1 3", top: "#button_onway_sub1 3", bottom: "#button_onway_sub1 3", right: "#button_onway_sub1 3"}, background: "#dfb72d", opacity: 0.6},   
-    
-    "#button_busy": {layoutData: {left: 0, bottom: "#button_free", height : buttonHeight(), width :  buttonWidth()}, background: "#d02e2e", alignment: "center", textColor : "#fff"},
-    "#button_busy_sub1": { layoutData: {left: "#button_busy 3", top: "#button_busy 3", bottom: "#button_busy 3", right: "#button_busy 3"}, background: "#000"},
-    "#button_busy_sub2": {layoutData: {left: "#button_busy_sub1 3", top: "#button_busy_sub1 3", bottom: "#button_busy_sub1 3", right: "#button_busy_sub1 3"}, background: "#d02e2e", opacity: 0.6},     
-    
-    "#button_offduty": {layoutData: {left: "#button_busy", right : 0, bottom: "#button_onway", height : buttonHeight(), width :  buttonWidth()}, background: "#bababa", alignment: "center"},
-    "#button_offduty_sub1": { layoutData: {left: "#button_offduty 3", top: "#button_offduty 3", bottom: "#button_offduty 3", right: "#button_offduty 3"}, background: "#000"},
-    "#button_offduty_sub2": {layoutData: {left: "#button_offduty_sub1 3", top: "#button_offduty_sub1 3", bottom: "#button_offduty_sub1 3", right: "#button_offduty_sub1 3"}, background: "#bababa", opacity: 0.6},     
-    
-    
 });
 
 
@@ -279,7 +212,7 @@ function buttonHeight(){
 }
 
 tabris.device.on("change:orientation", function(device, orientation) {
-  	window.plugins.insomnia.keepAwake();
+
     //Align button equaly on center depending on device screen width and orientation
     mainPage.apply({".statusBtns": {width: buttonWidth()}});
     mainPage.apply({".statusBtns": {height: buttonHeight()}});   
@@ -291,16 +224,10 @@ tabris.device.on("change:orientation", function(device, orientation) {
 
 
 
-updatePage.find(".sub2").on("touchstart", function(widget) {	
+tabris.ui.find(".statusBtns").on("touchstart", function(widget) {	
     //testLabel.set("text", this.id);
     
-    
-    tabris.ui.find(".sub2")._parent.set("background", tabris.ui.find(".sub2").get("background"));
-     
-    
-    this._parent.set("background", "#000");  
-    
-    tabris.ui.find(".sub2").set("opacity", 0.6);
+    tabris.ui.find(".statusBtns").set("opacity", 0.5);
     this.set("opacity", 1);
     
 });
