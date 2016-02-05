@@ -1,9 +1,9 @@
-
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.driver.app" version="1.1.0">
 	<name>driverapp</name>
 	<description>Driver tracking</description>
 	<author email="dev@tabrisjs.com" href="https://tabrisjs.com">Tabris.js Team</author>
+	<icon src="../res/images/car.png" />
 	<plugin name="cordova-plugin-gpslocation" version="1.0.0" />
 	<plugin name="cordova-plugin-insomnia" version="4.1.0" />
 </widget>
