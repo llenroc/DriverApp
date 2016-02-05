@@ -4,7 +4,6 @@
 	<name>driverapp</name>
 	<description>Driver tracking</description>
 	<author email="dev@tabrisjs.com" href="https://tabrisjs.com">Tabris.js Team</author>
-	<icon src="../res/images/car.png" />
 	<plugin name="cordova-plugin-gpslocation" version="1.0.0" />
-
+	<plugin name="cordova-plugin-insomnia" version="4.1.0" />
 </widget>
