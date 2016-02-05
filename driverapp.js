@@ -3,21 +3,18 @@ var touched = 0;
 var myTimer = 0;
 var carID;
 var myStorage = localStorage;
-
-
+var status = 1; //Curent car status. Set to "Free" (1) on start
 
 //On Ready
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady(){
-    window.plugins.insomnia.keepAwake()    
+    //window.plugins.insomnia.keepAwake()    
 }
 
 
 
 // Object declarations ///////////////////////////////////////////////////
-
-
 //tabris.ui.set("background", "#2196F3");
 
 var mainPage = tabris.create("Page", {
@@ -37,14 +34,7 @@ var updatePage = tabris.create("Page", {
     title: "პროგრამის განახლება",
     background: "#000",
     topLevel: true
-}); 
-
-//tabris.create("Action", {
-//  title: "Settings",
-//  image: {src: "res/images/settings.png", scale: scaleFactor}
-//}).on("select", function() {
-
-//});
+});
 
 tabris.create("Drawer").append(tabris.create("PageSelector"));
 
@@ -105,15 +95,25 @@ var testLabel = tabris.create("TextView", {
 }).appendTo(mainPage);
 
 
+//Car ID holder widget
+var compositeCarID = tabris.create("Composite", {
+  	layoutData: {top: 0, width : screenWidth(1), height: screenHeight(9), centerX: 0},
+	id : "compositeCarID",
+ 	background: "white"
+}).appendTo(mainPage);
+
+var compositeCarIDInner = tabris.create("Composite", {
+  	layoutData: {top: 1, left : 1, right : 1 , bottom: 1},
+ 	background: "#000"
+}).appendTo(compositeCarID);
+
 var carIDLabel = tabris.create("TextView",{
     id : "carIDLabel",
     font : "50px",
     textColor : "#fff",    
     text : "",
-    layoutData : {top : 5, centerX: 0}
-}).appendTo(mainPage);
-
-
+    layoutData : {top : 0, centerX: 0}
+}).appendTo(compositeCarIDInner);
 
 
 var carIDInputLabel = tabris.create("TextView", {
@@ -154,12 +154,11 @@ var removeBtn = tabris.create("Button", {
 
 
 //Page styling /////////////
-
 mainPage.apply({
-    "#buttonFree": {layoutData: {left: 0, height : buttonHeight(), bottom : 0, width :  buttonWidth()}, background: "#2edc5f", alignment: "center", textColor : "#fff"},
-    "#buttonOnWay": {layoutData: {left: "#buttonFree -5", right : 0, baseline: "#buttonFree", height : buttonHeight(), width :  buttonWidth()}, background: "#dfb72d", alignment: "center", opacity: 0.5},
-    "#buttonBusy": {layoutData: {left: 0, bottom: "#buttonFree -10", height : buttonHeight(), width :  buttonWidth()}, background: "#d02e2e", alignment: "center", textColor : "#fff", opacity: 0.5},
-    "#buttonOffduty": {layoutData: {left: "#buttonBusy -5", right : 0, baseline: "#buttonBusy", height : buttonHeight(), width :  buttonWidth()}, background: "#bababa", alignment: "center", opacity: 0.5},
+    "#buttonFree": {layoutData: {left: 0, height : screenHeight(6), bottom : 0, width :  screenWidth(2)}, background: "#2edc5f", alignment: "center", textColor : "#fff"},
+    "#buttonOnWay": {layoutData: {left: "#buttonFree -5", right : 0, baseline: "#buttonFree", height : screenHeight(6), width :  screenWidth(2)}, background: "#dfb72d", alignment: "center", opacity: 0.5},
+    "#buttonBusy": {layoutData: {left: 0, bottom: "#buttonFree -10", height : screenHeight(6), width :  screenWidth(2)}, background: "#d02e2e", alignment: "center", textColor : "#fff", opacity: 0.5},
+    "#buttonOffduty": {layoutData: {left: "#buttonBusy -5", right : 0, baseline: "#buttonBusy", height : screenHeight(6), width :  screenWidth(2)}, background: "#bababa", alignment: "center", opacity: 0.5},
 });
 
 settingsPage.apply({
@@ -167,50 +166,49 @@ settingsPage.apply({
   "#CarID": {layoutData: {left: "#carIDInputLabel 10", right: 10, baseline: "#carIDInputLabel"}, background : "#fff"},
   "#pass": {layoutData: {left: 10, top: "#CarID 18", width: 150}},
   "#passInput": {layoutData: {left: "#pass 10", right: 10, baseline: "#pass"}, background : "#fff"},
-  "#setId": {layoutData: {left: 5, top: "#passInput 58", height : 60, width :  buttonWidth()}, background: "#424242", textColor: "white"},
-  "#clearId": {layoutData: {left: buttonWidth(), height : 60,  baseline: "#setId", width :  buttonWidth()}, background: "#424242", textColor: "white"},   
+  "#setId": {layoutData: {left: 5, top: "#passInput 58", height : 60, width :  screenWidth(2)}, background: "#424242", textColor: "white"},
+  "#clearId": {layoutData: {left: "#setId -5", height : 60, baseline : "#setId",width :  screenWidth(2)}, background: "#424242", textColor: "white"},   
 });
-
-
 //End of Page styling /////////////
 
-function populateMessage() {
-
-}
  
-
 // End of object declarations ///////////////////////////////////////
 
 
 
-//Event binding //////////////////
-
+//Event binding /////////////////////////////////////////////////////
 
 //Override native back button action
 tabris.app.on("backnavigation", function(app, options) {
   //options.preventDefault = true;
-  // do something else than closing the page
+  //do something else than closing the page
 });
 
 
-
-function buttonWidth(){    
+//Used to calclulate widget dimentiones according to device scree size
+function screenWidth(x){
     var screenWidth = window.screen.width;
-    return Math.round(screenWidth / 2);    
+    return Math.round(screenWidth / x);	
 }
 
-function buttonHeight(){    
+function screenHeight(x){
     var screenHeight = window.screen.height;
-    return Math.round((screenHeight / 3)/2);  
+    return Math.round(screenHeight / x);	
 }
+
 
 tabris.device.on("change:orientation", function(device, orientation) {
 
     //Align button equaly on center depending on device screen width and orientation
-    mainPage.apply({".statusBtns": {width: buttonWidth()}});
-    mainPage.apply({".statusBtns": {height: buttonHeight()}});   
+    mainPage.apply({".statusBtns": {width: screenWidth(2)}});
+    mainPage.apply({".statusBtns": {height: screenHeight(6)}});
+	
+	compositeCarID.set("width", screenWidth(1));
+	compositeCarID.set("height", screenHeight(9));
+	
+	submitBtn.set("width", screenWidth(2));
+	removeBtn.set("width", screenWidth(2));   
 });
-
 
 
 tabris.ui.find(".statusBtns").on("touchstart", function(widget) {	
@@ -242,32 +240,23 @@ setInterval(function(){
 }, 1000);
 
 
-
-// onSuccess Callback
-// This method accepts a Position object, which contains the
-// current GPS coordinates
-//
+// onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
 var onSuccess = function(position) {
 	label.set("text", position.coords.latitude+' - '+position.coords.longitude);
 };
 
 // onError Callback receives a PositionError object
-//
 function onError(error) {
 	label.set("text", error.code+' - '+error.message);
 }
 
 carID = localStorage.getItem("CarID");
 
-if (carID) {
-    
+if (carID) {    
     carIDLabel.set("text", "#" + carID);
     mainPage.open();
-
 }
 else {
-
     carIDLabel.set("text", "#?");
     settingsPage.open()
-
 };
