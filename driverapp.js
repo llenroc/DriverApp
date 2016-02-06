@@ -67,7 +67,8 @@ var button_3 = tabris.create("Button", {
 var label = tabris.create("TextView", {
     font: "12px",
     textColor : "#fff",
-  layoutData: {centerX: 0, top: [button_1, 10]}
+    layoutData: {centerX: 0, top: "#compositeGPS"},
+    text : "GPS info"
 }).appendTo(mainPage);
 
 var label2 = tabris.create("TextView", {
@@ -246,7 +247,7 @@ removeBtn.on("select", function(){
 
 setInterval(function(){ 
     myTimer+=1; label2.set("text", myTimer.toString())
-    GPSLocation.getCurrentPosition(onSuccess, onError);
+    //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 100 }); // increase timeout
 }, 1000);
 
 
