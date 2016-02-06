@@ -111,6 +111,7 @@ var compositeGPS = tabris.create("Composite", {
 
 var gpsImage = tabris.create("ImageView", {
     layoutData: {top : 1, left : 5, centerY: 0},
+    image : { src : "res/images/gps_not_fixed.png"},
     id: "gpsImage"
     //image: {src: "res/images/gps_fixed.png"},
 }).appendTo(compositeGPS);
