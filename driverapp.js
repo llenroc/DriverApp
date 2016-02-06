@@ -253,25 +253,22 @@ setInterval(function(){
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
 var onSuccess = function(position) {
 	
-    if (position.coords == ""){
-    
-        label.set("text", "GPS სიგნალი დაიკარგა");
-        gpsImage.set("image", {src: "res/images/gps_not_fixed.png"});        
-    }
-    else{
         label.set("text", position.coords.latitude+' - '+position.coords.longitude); 
         gpsImage.set("image", {src: "res/images/gps_fixed.png"});   
-    }  
 
 };
-
-
 
 // onError Callback receives a PositionError object
 function onError(error) {
 	label.set("text", error.code+' - '+error.message);
     gpsImage.set("image", {src: "res/images/gps_off.png"});
 }
+
+
+
+
+
+
 
 carID = localStorage.getItem("CarID");
 
