@@ -67,7 +67,7 @@ var button_3 = tabris.create("Button", {
 var label = tabris.create("TextView", {
     font: "12px",
     textColor : "#fff",
-    layoutData: {centerX: 0, top: "#compositeGPS"},
+    layoutData: {centerX: 0, top: "#compositeGPS 5"},
     text : "GPS info"
 }).appendTo(mainPage);
 
