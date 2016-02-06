@@ -249,7 +249,7 @@ removeBtn.on("select", function(){
 
 setInterval(function(){ 
     myTimer+=1; label2.set("text", myTimer.toString())
-    //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 100 }); // increase timeout
+    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 100 }); // increase timeout
 }, 1000);
 
 
