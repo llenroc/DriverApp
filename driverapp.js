@@ -64,16 +64,6 @@ var button_3 = tabris.create("Button", {
 }).appendTo(mainPage);
 
 
-tabris.create("ImageView", {
-  layoutData: {centerX: 0, centerY: 0, top: [label2,10]},
-  image: {src: "res/images/car.png"},
-  highlightOnTouch: true
-}).on("tap", function() {
-  touched++;
-  mainPage.set("title", "touched " + touched + " times");
-}).appendTo(mainPage);
-
-
 var label = tabris.create("TextView", {
     font: "12px",
     textColor : "#fff",
@@ -95,15 +85,15 @@ var testLabel = tabris.create("TextView", {
 }).appendTo(mainPage);
 
 
-//Car ID holder widget
+// Car ID holder widget /////////////////////////////////////////////////////////////////////////////
 var compositeCarID = tabris.create("Composite", {
   	layoutData: {top: 0, width : screenWidth(1), height: screenHeight(9), centerX: 0},
 	id : "compositeCarID",
- 	background: "white"
+ 	background: "#777"
 }).appendTo(mainPage);
 
 var compositeCarIDInner = tabris.create("Composite", {
-  	layoutData: {top: 1, left : 1, right : 1 , bottom: 1},
+  	layoutData: {top: 0, left : 0, right : 0 , bottom: 1},
  	background: "#000"
 }).appendTo(compositeCarID);
 
@@ -114,6 +104,26 @@ var carIDLabel = tabris.create("TextView",{
     text : "",
     layoutData : {top : 0, centerX: 0}
 }).appendTo(compositeCarIDInner);
+
+
+
+// Gps info row //////////////////////////////////////////////////////////////////////////////////////
+
+var compositeGPS = tabris.create("Composite", {
+  	layoutData: {top: compositeCarID, width : screenWidth(1), height: screenHeight(9), centerX: 0},
+	id : "compositeGPS",
+ 	background: "#000"
+}).appendTo(mainPage);
+
+var gpsImage = tabris.create("ImageView", {
+    layoutData: {top : 1, left : 5, centerY: 0},
+    id: "gpsImage"
+    //image: {src: "res/images/gps_fixed.png"},
+}).appendTo(compositeGPS);
+
+// End of GPS info row ///////////////////////////////////////////////////////////////////////////////
+
+
 
 
 var carIDInputLabel = tabris.create("TextView", {
@@ -242,12 +252,25 @@ setInterval(function(){
 
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
 var onSuccess = function(position) {
-	label.set("text", position.coords.latitude+' - '+position.coords.longitude);
+	
+    if (position.coords == ""){
+    
+        label.set("text", "GPS სიგნალი დაიკარგა");
+        gpsImage.set("image", {src: "res/images/gps_not_fixed.png"});        
+    }
+    else{
+        label.set("text", position.coords.latitude+' - '+position.coords.longitude); 
+        gpsImage.set("image", {src: "res/images/gps_fixed.png"});   
+    }  
+
 };
+
+
 
 // onError Callback receives a PositionError object
 function onError(error) {
 	label.set("text", error.code+' - '+error.message);
+    gpsImage.set("image", {src: "res/images/gps_off.png"});
 }
 
 carID = localStorage.getItem("CarID");
