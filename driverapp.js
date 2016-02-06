@@ -13,7 +13,6 @@ function onDeviceReady(){
 }
 
 
-
 // Object declarations ///////////////////////////////////////////////////
 //tabris.ui.set("background", "#2196F3");
 
@@ -68,7 +67,7 @@ var label2 = tabris.create("TextView", {
   font: "12px",
     textColor : "#fff",
     text : "count",
-  layoutData: {centerX: 0, top: "#compositeGPS 10"}
+  layoutData: {centerX: 0, top: "#compositeData 10"}
 }).appendTo(mainPage);
 
 var testLabel = tabris.create("TextView", {
@@ -127,7 +126,26 @@ var GPSlabel = tabris.create("TextView",{
 
 // End of GPS info row ///////////////////////////////////////////////////////////////////////////////
 
+// Data connection info //////////////////////////////////////////////////////////////////////////////
 
+var compositeData = tabris.create("Composite", {
+  	layoutData: {top: compositeGPS, width : screenWidth(1), height: screenHeight(9), centerX: 0},
+	id : "compositeData",
+ 	background: "#3a3a3a"
+}).appendTo(mainPage);
+
+
+var Datalabel = tabris.create("TextView",{
+    id : "GPSlabel",
+    font : "12px",
+    textColor : "#fff",    
+    text : "Data connection Info",
+    layoutData : {left : 5, centerY :0 }
+}).appendTo(compositeData);
+
+
+
+// End of Data connection info ///////////////////////////////////////////////////////////////////////
 
 
 var carIDInputLabel = tabris.create("TextView", {
@@ -226,9 +244,15 @@ tabris.device.on("change:orientation", function(device, orientation) {
 
 
 tabris.ui.find(".statusBtns").on("touchstart", function(widget) {	
+    
+    
+    
     testLabel.set("text", this.id);    
     tabris.ui.find(".statusBtns").set("opacity", 0.5);
-    this.set("opacity", 1);    
+    this.set("opacity", 1);
+    
+    
+    
 });
 
 
@@ -248,9 +272,31 @@ removeBtn.on("select", function(){
 // End of event binding /////////////////////////////////////////////
 
 
+// Check data connection ///////////////////////////////////////////
+function checkConnection() {
+    var networkState = navigator.connection.type;
+
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'WiFi connection';
+    states[Connection.CELL_2G]  = 'Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.CELL]     = 'Cell generic connection';
+    states[Connection.NONE]     = 'No network connection';
+
+    Datalabel.set("text", states[networkState]); 
+
+}
+
+
+
 setInterval(function(){ 
-    myTimer+=1; label2.set("text", myTimer.toString())
+    myTimer+=1; 
+    label2.set("text", myTimer.toString())
     GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 100 }); // increase timeout
+    checkConnection();
 }, 1000);
 
 
@@ -271,11 +317,13 @@ function onError(error) {
     /////////////////////
     
     if (error.code == 2){    
-        GPSlabel.set("text", error.code+' - '+error.message);
+        //GPSlabel.set("text", error.code+' - '+error.message);
+        GPSlabel.set("text", "ჩართეთ GPS");
         gpsImage.set("image", {src: "res/images/gps_off.png"});        
     }
     else {
-        GPSlabel.set("text", error.code+' - '+error.message);
+        //GPSlabel.set("text", error.code+' - '+error.message);
+        GPSlabel.set("text", "GPS სიგნალის ძიება..");
         gpsImage.set("image", {src: "res/images/gps_not_fixed.png"});        
     }
 
