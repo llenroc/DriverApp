@@ -113,7 +113,7 @@ var carIDLabel = tabris.create("TextView",{
 var compositeGPS = tabris.create("Composite", {
   	layoutData: {top: compositeCarID, width : screenWidth(1), height: screenHeight(9), centerX: 0},
 	id : "compositeGPS",
- 	background: "#000"
+ 	background: "blue"
 }).appendTo(mainPage);
 
 var gpsImage = tabris.create("ImageView", {
