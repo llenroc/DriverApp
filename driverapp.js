@@ -64,18 +64,11 @@ var button_3 = tabris.create("Button", {
 }).appendTo(mainPage);
 
 
-var label = tabris.create("TextView", {
-    font: "12px",
-    textColor : "#fff",
-    layoutData: {centerX: 0, top: "#compositeGPS 5"},
-    text : "GPS info"
-}).appendTo(mainPage);
-
 var label2 = tabris.create("TextView", {
   font: "12px",
     textColor : "#fff",
-    text : "",
-  layoutData: {centerX: 0, top: [label, 20]}
+    text : "count",
+  layoutData: {centerX: 0, top: "#compositeGPS 10"}
 }).appendTo(mainPage);
 
 var testLabel = tabris.create("TextView", {
@@ -120,6 +113,15 @@ var gpsImage = tabris.create("ImageView", {
     layoutData: {top : 1, left : 5, centerY: 0},
     id: "gpsImage"
     //image: {src: "res/images/gps_fixed.png"},
+}).appendTo(compositeGPS);
+
+
+var GPSlabel = tabris.create("TextView",{
+    id : "GPSlabel",
+    font : "12px",
+    textColor : "#fff",    
+    text : "GPS Info",
+    layoutData : {left : "#gpsImage 10", centerY :0 }
 }).appendTo(compositeGPS);
 
 // End of GPS info row ///////////////////////////////////////////////////////////////////////////////
@@ -247,22 +249,35 @@ removeBtn.on("select", function(){
 
 setInterval(function(){ 
     myTimer+=1; label2.set("text", myTimer.toString())
-    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 100 }); // increase timeout
+    //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 100 }); // increase timeout
 }, 1000);
 
 
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
 var onSuccess = function(position) {
 	
-        label.set("text", position.coords.latitude+' - '+position.coords.longitude); 
+        GPSlabel.set("text", position.coords.latitude+' - '+position.coords.longitude); 
         gpsImage.set("image", {src: "res/images/gps_fixed.png"});   
 
 };
 
 // onError Callback receives a PositionError object
 function onError(error) {
-	label.set("text", error.code+' - '+error.message);
-    gpsImage.set("image", {src: "res/images/gps_off.png"});
+	
+    /////////////////////
+    // Code 2 - GPS off
+    // Code 3 - Timeout    
+    /////////////////////
+    
+    if (code == 2){    
+        GPSlabel.set("text", error.code+' - '+error.message);
+        gpsImage.set("image", {src: "res/images/gps_off.png"});        
+    }
+    else {
+        GPSlabel.set("text", error.code+' - '+error.message);
+        gpsImage.set("image", {src: "res/images/gps_not_fixed.png"});        
+    }
+
 }
 
 
