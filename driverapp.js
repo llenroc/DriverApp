@@ -270,7 +270,7 @@ function onError(error) {
     // Code 3 - Timeout    
     /////////////////////
     
-    if (code == 2){    
+    if (error.code == 2){    
         GPSlabel.set("text", error.code+' - '+error.message);
         gpsImage.set("image", {src: "res/images/gps_off.png"});        
     }
