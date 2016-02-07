@@ -4,7 +4,10 @@ var myTimer = 0;
 var carID;
 var myStorage = localStorage;
 var carStatus = 1; //Curent car status. Set to "Free" (1) on start
-var connectionStatus;
+var connectionStatus = {
+    gps: {lat : "", lng : "", connected : false, reason : ""},
+    data: {connected : false, type : ""}
+};
 
 
 //On Ready
@@ -125,6 +128,9 @@ var GPSlabel = tabris.create("TextView",{
 }).appendTo(compositeGPS);
 
 // End of GPS info row ///////////////////////////////////////////////////////////////////////////////
+
+
+
 
 // Data connection info //////////////////////////////////////////////////////////////////////////////
 
@@ -286,8 +292,16 @@ function checkConnection() {
     states[Connection.CELL]     = 'Cell generic connection';
     states[Connection.NONE]     = 'No network connection';
 
-    Datalabel.set("text", states[networkState]); 
 
+    if (networkState == "Connection.NONE"){
+        connectionStatus.data.connected = false;
+    }
+    else{
+        connectionStatus.data.connected = true; 
+    }
+    
+    connectionStatus.data.type = states[networkState];
+    Datalabel.set("text", states[networkState]);
 }
 
 
