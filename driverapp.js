@@ -1,28 +1,33 @@
-//Variables
+// Variables /////////////////////////////////////////////////////////////
 var touched = 0;
 var myTimer = 0;
 var carID;
 var myStorage = localStorage;
-var carStatus = 1; //Curent car status. Set to "Free" (1) on start
+
+// Curent car status. Set to "Free" (1) on start /////////////////////////
+var carStatus = 1;
 var connectionStatus = {
     gps: {lat : "", lng : "", connected : false, reason : ""},
     data: {connected : false, type : ""}
 };
 
 
-//On Ready
+// On Ready //////////////////////////////////////////////////////////////
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady(){
     window.plugins.insomnia.keepAwake()    
 }
 
+
+// Check data connection /////////////////////////////////////////////////
 document.addEventListener("offline", onDeviceOffline, false);
 document.addEventListener("online", onDeviceOnline, false);
 
 
 // Object declarations ///////////////////////////////////////////////////
-//tabris.ui.set("background", "#2196F3");
+
+tabris.create("Drawer").append(tabris.create("PageSelector"));
 
 var mainPage = tabris.create("Page", {
     title: "მთავარი",
@@ -42,9 +47,6 @@ var updatePage = tabris.create("Page", {
     background: "#000",
     topLevel: true
 });
-
-tabris.create("Drawer").append(tabris.create("PageSelector"));
-
 
 var button = tabris.create("Button", {
     id: "buttonFree",
@@ -106,6 +108,7 @@ var carIDLabel = tabris.create("TextView",{
     layoutData : {top : 0, centerX: 0}
 }).appendTo(compositeCarIDInner);
 
+// End of Car ID holder widget ///////////////////////////////////////////////////////////////////////
 
 
 // Gps info row //////////////////////////////////////////////////////////////////////////////////////
@@ -115,24 +118,21 @@ var compositeGPS = tabris.create("Composite", {
  	background: "#1e1e1e"
 }).appendTo(mainPage);
 
-var gpsImage = tabris.create("ImageView", {
-    layoutData: {top : 1, left : 5, centerY: 0},
-    image : { src : "res/images/gps_not_fixed.png"},
-    id: "gpsImage"
-}).appendTo(compositeGPS);
-
+//var gpsImage = tabris.create("ImageView", {
+//    layoutData: {top : 1, left : 5, centerY: 0},
+//    image : { src : "res/images/gps_not_fixed.png"},
+//    id: "gpsImage"
+//}).appendTo(compositeGPS);
 
 var GPSlabel = tabris.create("TextView",{
     id : "GPSlabel",
     font : "12px",
     textColor : "#fff",    
     text : "GPS Info",
-    layoutData : {left : "#gpsImage 10", centerY :0 }
+    layoutData : {left : 5, centerY :0 }
 }).appendTo(compositeGPS);
 
 // End of GPS info row ///////////////////////////////////////////////////////////////////////////////
-
-
 
 
 // Data connection info //////////////////////////////////////////////////////////////////////////////
@@ -151,8 +151,6 @@ var Datalabel = tabris.create("TextView",{
     text : "Data connection Info",
     layoutData : {left : 5, centerY :0 }
 }).appendTo(compositeData);
-
-
 
 // End of Data connection info ///////////////////////////////////////////////////////////////////////
 
@@ -210,14 +208,14 @@ settingsPage.apply({
   "#setId": {layoutData: {left: 5, top: "#passInput 58", height : 60, width :  screenWidth(2)}, background: "#424242", textColor: "white"},
   "#clearId": {layoutData: {left: "#setId -5", height : 60, baseline : "#setId",width :  screenWidth(2)}, background: "#424242", textColor: "white"},   
 });
-//End of Page styling /////////////
+
+// End of Page styling /////////////////////////////////////////////////////////////////////////////////////////
 
  
-// End of object declarations ///////////////////////////////////////
+// End of object declarations //////////////////////////////////////////////////////////////////////////////////
 
 
-
-//Event binding /////////////////////////////////////////////////////
+// Event binding ///////////////////////////////////////////////////////////////////////////////////////////////
 
 //Override native back button action
 tabris.app.on("backnavigation", function(app, options) {
@@ -226,7 +224,7 @@ tabris.app.on("backnavigation", function(app, options) {
 });
 
 
-//Used to calclulate widget dimentiones according to device scree size
+// Calclulate widget dimentiones according to device scree size ///////////////////////////////////////////
 function screenWidth(x){
     var screenWidth = window.screen.width;
     return Math.round(screenWidth / x);	
@@ -252,15 +250,11 @@ tabris.device.on("change:orientation", function(device, orientation) {
 });
 
 
-tabris.ui.find(".statusBtns").on("touchstart", function(widget) {	
-    
-    
+tabris.ui.find(".statusBtns").on("touchstart", function(widget) {    
     
     testLabel.set("text", this.id);    
     tabris.ui.find(".statusBtns").set("opacity", 0.5);
     this.set("opacity", 1);
-    
-    
     
 });
 
@@ -273,7 +267,6 @@ submitBtn.on("select", function(){
 });
 
 removeBtn.on("select", function(){    
-    //carIDInput.set("text", localStorage.getItem("CarID"));
     myStorage.removeItem("CarID");
     carIDLabel.set("text", "#?");
 });
@@ -281,38 +274,9 @@ removeBtn.on("select", function(){
 // End of event binding /////////////////////////////////////////////
 
 
-// Check data connection ///////////////////////////////////////////
-function checkConnection() {
-    var networkState = navigator.connection.type;
-
-    var states = {};
-    states[Connection.UNKNOWN]  = 'Unknown connection';
-    states[Connection.ETHERNET] = 'Ethernet connection';
-    states[Connection.WIFI]     = 'WiFi connection';
-    states[Connection.CELL_2G]  = 'Cell 2G connection';
-    states[Connection.CELL_3G]  = 'Cell 3G connection';
-    states[Connection.CELL_4G]  = 'Cell 4G connection';
-    states[Connection.CELL]     = 'Cell generic connection';
-    states[Connection.NONE]     = 'No network connection';
-
-
-    if (networkState == "Connection.NONE"){
-        connectionStatus.data.connected = false;
-    }
-    else{
-        connectionStatus.data.connected = true; 
-    }
-    
-    connectionStatus.data.type = states[networkState];
-    Datalabel.set("text", states[networkState]);
-}
-
-
-
 setInterval(function(){ 
     GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 100 }); // increase timeout
-    //checkConnection();
-    
+
     // For tests /////////////////////////
     myTimer+=1; 
     label2.set("text", myTimer.toString())
@@ -323,32 +287,34 @@ setInterval(function(){
 
 function onDeviceOffline(){    
     connectionStatus.data.connected = false;
-    Datalabel.set("text", "შეამოწმეთ ინტერნეტთან კავშირი");    
+    Datalabel.set("text", "შეამოწმეთ ინტერნეტთან კავშირი");
+    Datalabel.set("textColor", "red");
 }
 
 function onDeviceOnline(){    
     connectionStatus.data.connected = true;
-    Datalabel.set("text", "OK");    
+    Datalabel.set("text", "ინტერნეტთან კავშირი: OK");
+    Datalabel.set("tectColor", "green");    
 }
 
 
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
-var onSuccess = function(position) {
+var onSuccess = function(position){
         connectionStatus.gps.lat = position.coords.latitude;
         connectionStatus.gps.lng = position.coords.longitude;
         connectionStatus.gps.connected = true;
 	
         GPSlabel.set("text", position.coords.latitude+' - '+position.coords.longitude); 
-        gpsImage.set("image", {src: "res/images/gps_fixed.png"});    
+        GPSlabel.set("tectColor", "green");
+        //gpsImage.set("image", {src: "res/images/gps_fixed.png"});
+    
 };
 
-// onError Callback receives a PositionError object
-function onError(error) {
+// onError Callback receives a PositionError object /////////////////////////////////
+
+function onError(error){
 	
-    /////////////////////
-    // Code 2 - GPS off
-    // Code 3 - Timeout    
-    /////////////////////
+    /////////////////////// Code 2 - GPS off, Code 3 - Timeout  /////////////////////
     
     if (error.code == 2){    
         connectionStatus.gps.lat = "--";
@@ -357,7 +323,8 @@ function onError(error) {
         connectionStatus.gps.reason = error.code + " | " +error.message;
 
         GPSlabel.set("text", "ჩართეთ GPS" + connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
-        gpsImage.set("image", {src: "res/images/gps_off.png"});
+        GPSlabel.set("tectColor", "red");
+        //gpsImage.set("image", {src: "res/images/gps_off.png"});
         
     }
     else {
@@ -366,21 +333,16 @@ function onError(error) {
         connectionStatus.gps.connected = false;
         connectionStatus.gps.reason = error.code + " | " +error.message;        
 
-        GPSlabel.set("text", "GPS სიგნალის ძიება.." + connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
-        gpsImage.set("image", {src: "res/images/gps_not_fixed.png"});        
+        GPSlabel.set("text", "GPS სიგნალის ძიება.. " + connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
+        GPSlabel.set("tectColor", "yellow");
+        //gpsImage.set("image", {src: "res/images/gps_not_fixed.png"});        
         
     }
-
 }
 
 
 
-
-
-
-
 carID = localStorage.getItem("CarID");
-
 if (carID) {    
     carIDLabel.set("text", "#" + carID);
     mainPage.open();
