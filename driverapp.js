@@ -17,6 +17,9 @@ function onDeviceReady(){
     window.plugins.insomnia.keepAwake()    
 }
 
+document.addEventListener("offline", onDeviceOffline, false);
+document.addEventListener("online", onDeviceOnline, false);
+
 
 // Object declarations ///////////////////////////////////////////////////
 //tabris.ui.set("background", "#2196F3");
@@ -308,7 +311,7 @@ function checkConnection() {
 
 setInterval(function(){ 
     GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 100 }); // increase timeout
-    checkConnection();
+    //checkConnection();
     
     // For tests /////////////////////////
     myTimer+=1; 
@@ -316,6 +319,17 @@ setInterval(function(){
     //////////////////////////////////////
     
 }, 10000);
+
+
+function onDeviceOffline(){    
+    connectionStatus.data.connected = false;
+    Datalabel.set("text", "შეამოწმეთ ინტერნეტთან კავშირი");    
+}
+
+function onDeviceOnline(){    
+    connectionStatus.data.connected = true;
+    Datalabel.set("text", "OK");    
+}
 
 
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
