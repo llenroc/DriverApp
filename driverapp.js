@@ -4,7 +4,7 @@ var myTimer = 0;
 var carID;
 var myStorage = localStorage;
 
-var fontSmall = "16px";
+var fontSmall = "18px";
 var fontHeader = "50px";
 
 var colorDimmed = "#858383";
@@ -24,11 +24,21 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady(){
     window.plugins.insomnia.keepAwake();
     
-    // Check data connection /////////////////////////////////////////////////
+    // Check initial data connection    
+    checkDataConnection();
+    
+    // Data connection listeners
     document.addEventListener("offline", onDeviceOffline, false);
     document.addEventListener("online", onDeviceOnline, false);    
 }
 
+
+
+function checkDataConnection(){
+    
+    if (navigator.connection.type == "Connection.NONE"){ onDeviceOffline() }
+    else { onDeviceOnline() }    
+}
 
 // Object declarations ///////////////////////////////////////////////////
 
@@ -125,7 +135,7 @@ var carIDLabel = tabris.create("TextView",{
 
 
 var compositeGPSData = tabris.create("Composite", {
-  	layoutData: {top: [compositeCarID, -1], width : screenWidth(1), height: screenHeight(9), centerX: 0},
+  	layoutData: {top: [compositeCarID, -1], width : screenWidth(1), height: screenHeight(8), centerX: 0},
 	id : "compositeGPSData",
  	background: "#777"
 }).appendTo(mainPage);
@@ -243,6 +253,9 @@ tabris.device.on("change:orientation", function(device, orientation) {
 	
 	compositeCarID.set("width", screenWidth(1));
 	compositeCarID.set("height", screenHeight(9));
+    
+	compositeGPSData.set("width", screenWidth(1));
+	compositeGPSData.set("height", screenHeight(8));    
 	
 	submitBtn.set("width", screenWidth(2));
 	removeBtn.set("width", screenWidth(2));   
@@ -253,7 +266,7 @@ tabris.ui.find(".statusBtns").on("select", function(widget) {
     
     testLabel.set("text", this.id);    
     tabris.ui.find(".statusBtns").set("opacity", 0.5);
-    tabris.ui.find(".statusBtns").set("font", fontSmall);
+    tabris.ui.find(".statusBtns").set("font", "16px");
     
     this.set("opacity", 1);
     this.set("font", "bold 16px");
@@ -290,13 +303,13 @@ setInterval(function(){
 function onDeviceOffline(){    
     connectionStatus.data.connected = false;
     dataLabel.set("text", "შეამოწმეთ ინტერნეტთან კავშირი");
-    dataLabel.set("textColor", "red");
+    dataLabel.set("textColor", "#d02e2e");
 }
 
 function onDeviceOnline(){    
     connectionStatus.data.connected = true;
     dataLabel.set("text", "ინტერნეტ კავშირი: OK");
-    dataLabel.set("textColor", "green");    
+    dataLabel.set("textColor", "#2edc5f");    
 }
 
 
@@ -306,7 +319,7 @@ var onSuccess = function(position){
         connectionStatus.gps.lng = position.coords.longitude;
         connectionStatus.gps.connected = true;
 	
-        GPSlabel.set("textColor", "green");
+        GPSlabel.set("textColor", "#2edc5f");
         GPSlabel.set("text", "GPS კავშირი : OK" + position.coords.latitude+' - '+position.coords.longitude); 
 
         //gpsImage.set("image", {src: "res/images/gps_fixed.png"});    
@@ -324,7 +337,7 @@ function onError(error){
         connectionStatus.gps.connected = false;
         connectionStatus.gps.reason = error.code + " | " +error.message;
 
-        GPSlabel.set("textColor", "red");
+        GPSlabel.set("textColor", "#d02e2e");
         GPSlabel.set("text", "საჭიროა GPS-ის ჩართვა" + connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
 
         //gpsImage.set("image", {src: "res/images/gps_off.png"});
@@ -336,7 +349,7 @@ function onError(error){
         connectionStatus.gps.connected = false;
         connectionStatus.gps.reason = error.code + " | " +error.message;        
 
-        GPSlabel.set("textColor", "yellow");
+        GPSlabel.set("textColor", "#dfb72d");
         GPSlabel.set("text", "GPS სიგნალის ძიება.. " + connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
 
         //gpsImage.set("image", {src: "res/images/gps_not_fixed.png"});        
