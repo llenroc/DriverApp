@@ -24,9 +24,6 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady(){
     window.plugins.insomnia.keepAwake();
     
-    // Check initial data connection    
-    checkDataConnection();
-    
     // Data connection listeners
     document.addEventListener("offline", onDeviceOffline, false);
     document.addEventListener("online", onDeviceOnline, false);    
@@ -357,6 +354,8 @@ function onError(error){
 }
 
 
+// Check initial data connection    
+checkDataConnection();
 
 carID = localStorage.getItem("CarID");
 
