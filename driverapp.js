@@ -4,8 +4,14 @@ var myTimer = 0;
 var carID;
 var myStorage = localStorage;
 
+var fontSmall = "16px";
+var fontHeader = "50px";
+
+var colorDimmed = "#858383";
+
 // Curent car status. Set to "Free" (1) on start /////////////////////////
 var carStatus = 1;
+
 var connectionStatus = {
     gps: {lat : "", lng : "", connected : false, reason : ""},
     data: {connected : false, type : ""}
@@ -16,13 +22,12 @@ var connectionStatus = {
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady(){
-    window.plugins.insomnia.keepAwake()    
+    window.plugins.insomnia.keepAwake();
+    
+    // Check data connection /////////////////////////////////////////////////
+    document.addEventListener("offline", onDeviceOffline, false);
+    document.addEventListener("online", onDeviceOnline, false);    
 }
-
-
-// Check data connection /////////////////////////////////////////////////
-document.addEventListener("offline", onDeviceOffline, false);
-document.addEventListener("online", onDeviceOnline, false);
 
 
 // Object declarations ///////////////////////////////////////////////////
@@ -32,7 +37,6 @@ tabris.create("Drawer").append(tabris.create("PageSelector"));
 var mainPage = tabris.create("Page", {
     title: "მთავარი",
     background: "#000",
-    //image: "images/my-page.png",
     topLevel: true
 });
 
@@ -77,7 +81,7 @@ var label2 = tabris.create("TextView", {
   font: "12px",
     textColor : "#fff",
     text : "count",
-  layoutData: {centerX: 0, top: "#compositeData 10"}
+  layoutData: {centerX: 0, top: "#compositeGPSData 10"}
 }).appendTo(mainPage);
 
 var testLabel = tabris.create("TextView", {
@@ -96,27 +100,22 @@ var compositeCarID = tabris.create("Composite", {
 }).appendTo(mainPage);
 
 var compositeCarIDInner = tabris.create("Composite", {
-  	layoutData: {top: 0, left : 0, right : 0 , bottom: 1},
- 	background: "#000"
+  	layoutData: {top: 1, left : 1, right : 1 , bottom: 1},
+ 	background: "#262626"
 }).appendTo(compositeCarID);
 
 var carIDLabel = tabris.create("TextView",{
     id : "carIDLabel",
-    font : "50px",
+    font : fontHeader,
     textColor : "#fff",    
-    text : "",
+    text : "#",
     layoutData : {top : 0, centerX: 0}
 }).appendTo(compositeCarIDInner);
 
 // End of Car ID holder widget ///////////////////////////////////////////////////////////////////////
 
 
-// Gps info row //////////////////////////////////////////////////////////////////////////////////////
-var compositeGPS = tabris.create("Composite", {
-  	layoutData: {top: compositeCarID, width : screenWidth(1), centerX: 0},
-	id : "compositeGPS",
- 	background: "#1e1e1e"
-}).appendTo(mainPage);
+// Data & Gps info row //////////////////////////////////////////////////////////////////////////////////////
 
 //var gpsImage = tabris.create("ImageView", {
 //    layoutData: {top : 1, left : 5, centerY: 0},
@@ -124,35 +123,35 @@ var compositeGPS = tabris.create("Composite", {
 //    id: "gpsImage"
 //}).appendTo(compositeGPS);
 
-var GPSlabel = tabris.create("TextView",{
-    id : "GPSlabel",
-    font : "12px",
-    textColor : "#fff",    
-    text : "GPS ინფო",
-    layoutData : {left : 5, centerY :0 }
-}).appendTo(compositeGPS);
 
-// End of GPS info row ///////////////////////////////////////////////////////////////////////////////
-
-
-// Data connection info //////////////////////////////////////////////////////////////////////////////
-
-var compositeData = tabris.create("Composite", {
-  	layoutData: {top: compositeGPS, width : screenWidth(1), centerX: 0},
-	id : "compositeData",
- 	background: "#333232"
+var compositeGPSData = tabris.create("Composite", {
+  	layoutData: {top: [compositeCarID, -1], width : screenWidth(1), height: screenHeight(9), centerX: 0},
+	id : "compositeGPSData",
+ 	background: "#777"
 }).appendTo(mainPage);
 
+var compositeGPSDataInner = tabris.create("Composite", {
+  	layoutData: {top: 1, left : 1, right : 1 , bottom: 1},
+ 	background: "#262626"
+}).appendTo(compositeGPSData);
 
-var Datalabel = tabris.create("TextView",{
+var GPSlabel = tabris.create("TextView",{
     id : "GPSlabel",
-    font : "12px",
-    textColor : "#fff",    
-    text : "ინტერნეტთან კავშირის ინფო",
-    layoutData : {left : 5, centerY :0 }
-}).appendTo(compositeData);
+    font : fontSmall,
+    textColor : colorDimmed,    
+    text : "GPS კავშირი",
+    layoutData : {left : 10, top: [compositeCarID,10] }
+}).appendTo(compositeGPSData);
 
-// End of Data connection info ///////////////////////////////////////////////////////////////////////
+var dataLabel = tabris.create("TextView",{
+    id : "dataLabel",
+    font : fontSmall,
+    textColor : colorDimmed,    
+    text : "ინტერნეტ კავშირი",
+    layoutData : {left : 10, top : [GPSlabel,5] }
+}).appendTo(compositeGPSData);
+
+// End of Data & GPS connection info ///////////////////////////////////////////////////////////////////////
 
 
 var carIDInputLabel = tabris.create("TextView", {
@@ -201,12 +200,12 @@ mainPage.apply({
 });
 
 settingsPage.apply({
-  "#carIDInputLabel": {layoutData: {left: 10, top: 18, width: 150}},
-  "#CarID": {layoutData: {left: "#carIDInputLabel 10", right: 10, baseline: "#carIDInputLabel"}, background : "#fff"},
-  "#pass": {layoutData: {left: 10, top: "#CarID 18", width: 150}},
-  "#passInput": {layoutData: {left: "#pass 10", right: 10, baseline: "#pass"}, background : "#fff"},
-  "#setId": {layoutData: {left: 5, top: "#passInput 58", height : 60, width :  screenWidth(2)}, background: "#424242", textColor: "white"},
-  "#clearId": {layoutData: {left: "#setId -5", height : 60, baseline : "#setId",width :  screenWidth(2)}, background: "#424242", textColor: "white"},   
+    "#carIDInputLabel": {layoutData: {left: 10, top: 18, width: 150}},
+    "#CarID": {layoutData: {left: "#carIDInputLabel 10", right: 10, baseline: "#carIDInputLabel"}, background : "#fff"},
+    "#pass": {layoutData: {left: 10, top: "#CarID 18", width: 150}},
+    "#passInput": {layoutData: {left: "#pass 10", right: 10, baseline: "#pass"}, background : "#fff"},
+    "#setId": {layoutData: {left: 5, top: "#passInput 58", height : 60, width :  screenWidth(2)}, background: "#424242", textColor: "white"},
+    "#clearId": {layoutData: {left: "#setId -5", height : 60, baseline : "#setId",width :  screenWidth(2)}, background: "#424242", textColor: "white"},   
 });
 
 // End of Page styling /////////////////////////////////////////////////////////////////////////////////////////
@@ -219,8 +218,8 @@ settingsPage.apply({
 
 //Override native back button action
 tabris.app.on("backnavigation", function(app, options) {
-  //options.preventDefault = true;
-  //do something else than closing the page
+    //options.preventDefault = true;
+    //do something else than closing the page
 });
 
 
@@ -250,11 +249,14 @@ tabris.device.on("change:orientation", function(device, orientation) {
 });
 
 
-tabris.ui.find(".statusBtns").on("touchstart", function(widget) {    
+tabris.ui.find(".statusBtns").on("select", function(widget) {    
     
     testLabel.set("text", this.id);    
     tabris.ui.find(".statusBtns").set("opacity", 0.5);
+    tabris.ui.find(".statusBtns").set("font", fontSmall);
+    
     this.set("opacity", 1);
+    this.set("font", "bold 16px");
     
 });
 
@@ -275,26 +277,26 @@ removeBtn.on("select", function(){
 
 
 setInterval(function(){ 
-    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 100 }); // increase timeout
+    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 300 }); // increase timeout
 
     // For tests /////////////////////////
     myTimer+=1; 
     label2.set("text", myTimer.toString())
     //////////////////////////////////////
     
-}, 10000);
+}, 5000);
 
 
 function onDeviceOffline(){    
     connectionStatus.data.connected = false;
-    Datalabel.set("text", "შეამოწმეთ ინტერნეტთან კავშირი");
-    Datalabel.set("textColor", "red");
+    dataLabel.set("text", "შეამოწმეთ ინტერნეტთან კავშირი");
+    dataLabel.set("textColor", "red");
 }
 
 function onDeviceOnline(){    
     connectionStatus.data.connected = true;
-    Datalabel.set("text", "ინტერნეტთან კავშირი: OK");
-    Datalabel.set("textColor", "green");    
+    dataLabel.set("text", "ინტერნეტ კავშირი: OK");
+    dataLabel.set("textColor", "green");    
 }
 
 
@@ -305,7 +307,7 @@ var onSuccess = function(position){
         connectionStatus.gps.connected = true;
 	
         GPSlabel.set("textColor", "green");
-        GPSlabel.set("text", position.coords.latitude+' - '+position.coords.longitude); 
+        GPSlabel.set("text", "GPS კავშირი : OK" + position.coords.latitude+' - '+position.coords.longitude); 
 
         //gpsImage.set("image", {src: "res/images/gps_fixed.png"});    
 };
@@ -323,7 +325,7 @@ function onError(error){
         connectionStatus.gps.reason = error.code + " | " +error.message;
 
         GPSlabel.set("textColor", "red");
-        GPSlabel.set("text", "ჩართეთ GPS" + connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
+        GPSlabel.set("text", "საჭიროა GPS-ის ჩართვა" + connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
 
         //gpsImage.set("image", {src: "res/images/gps_off.png"});
         
@@ -344,11 +346,6 @@ function onError(error){
 
 
 carID = localStorage.getItem("CarID");
-if (carID) {    
-    carIDLabel.set("text", "#" + carID);
-    mainPage.open();
-}
-else {
-    carIDLabel.set("text", "#?");
-    settingsPage.open()
-};
+
+if (carID) { carIDLabel.set("text", "#" + carID); mainPage.open();}
+else { carIDLabel.set("text", "#?"); settingsPage.open()};
