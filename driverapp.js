@@ -3,13 +3,15 @@ var touched = 0;
 var myTimer = 0;
 var carID;
 var myStorage = localStorage;
-var status = 1; //Curent car status. Set to "Free" (1) on start
+var carStatus = 1; //Curent car status. Set to "Free" (1) on start
+var connectionStatus;
+
 
 //On Ready
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady(){
-    //window.plugins.insomnia.keepAwake()    
+    window.plugins.insomnia.keepAwake()    
 }
 
 
@@ -101,18 +103,16 @@ var carIDLabel = tabris.create("TextView",{
 
 
 // Gps info row //////////////////////////////////////////////////////////////////////////////////////
-
 var compositeGPS = tabris.create("Composite", {
   	layoutData: {top: compositeCarID, width : screenWidth(1), height: screenHeight(9), centerX: 0},
 	id : "compositeGPS",
- 	background: "blue"
+ 	background: "#1e1e1e"
 }).appendTo(mainPage);
 
 var gpsImage = tabris.create("ImageView", {
     layoutData: {top : 1, left : 5, centerY: 0},
     image : { src : "res/images/gps_not_fixed.png"},
     id: "gpsImage"
-    //image: {src: "res/images/gps_fixed.png"},
 }).appendTo(compositeGPS);
 
 
@@ -131,7 +131,7 @@ var GPSlabel = tabris.create("TextView",{
 var compositeData = tabris.create("Composite", {
   	layoutData: {top: compositeGPS, width : screenWidth(1), height: screenHeight(9), centerX: 0},
 	id : "compositeData",
- 	background: "#3a3a3a"
+ 	background: "#333232"
 }).appendTo(mainPage);
 
 
@@ -293,19 +293,25 @@ function checkConnection() {
 
 
 setInterval(function(){ 
-    myTimer+=1; 
-    label2.set("text", myTimer.toString())
     GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 100 }); // increase timeout
     checkConnection();
-}, 1000);
+    
+    // For tests /////////////////////////
+    myTimer+=1; 
+    label2.set("text", myTimer.toString())
+    //////////////////////////////////////
+    
+}, 10000);
 
 
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
 var onSuccess = function(position) {
+        connectionStatus.gps.lat = position.coords.latitude;
+        connectionStatus.gps.lng = position.coords.longitude;
+        connectionStatus.gps.connected = true;
 	
         GPSlabel.set("text", position.coords.latitude+' - '+position.coords.longitude); 
-        gpsImage.set("image", {src: "res/images/gps_fixed.png"});   
-
+        gpsImage.set("image", {src: "res/images/gps_fixed.png"});    
 };
 
 // onError Callback receives a PositionError object
@@ -317,14 +323,24 @@ function onError(error) {
     /////////////////////
     
     if (error.code == 2){    
-        //GPSlabel.set("text", error.code+' - '+error.message);
-        GPSlabel.set("text", "ჩართეთ GPS");
-        gpsImage.set("image", {src: "res/images/gps_off.png"});        
+        connectionStatus.gps.lat = "--";
+        connectionStatus.gps.lng = "--";
+        connectionStatus.gps.connected = false;
+        connectionStatus.gps.reason = error.code + " | " +error.message;
+
+        GPSlabel.set("text", "ჩართეთ GPS" + connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
+        gpsImage.set("image", {src: "res/images/gps_off.png"});
+        
     }
     else {
-        //GPSlabel.set("text", error.code+' - '+error.message);
-        GPSlabel.set("text", "GPS სიგნალის ძიება..");
+        connectionStatus.gps.lat = "--";
+        connectionStatus.gps.lng = "--";
+        connectionStatus.gps.connected = false;
+        connectionStatus.gps.reason = error.code + " | " +error.message;        
+
+        GPSlabel.set("text", "GPS სიგნალის ძიება.." + connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
         gpsImage.set("image", {src: "res/images/gps_not_fixed.png"});        
+        
     }
 
 }
