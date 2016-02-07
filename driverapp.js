@@ -113,7 +113,7 @@ var carIDLabel = tabris.create("TextView",{
 
 // Gps info row //////////////////////////////////////////////////////////////////////////////////////
 var compositeGPS = tabris.create("Composite", {
-  	layoutData: {top: compositeCarID, width : screenWidth(1), height: screenHeight(9), centerX: 0},
+  	layoutData: {top: compositeCarID, width : screenWidth(1), centerX: 0},
 	id : "compositeGPS",
  	background: "#1e1e1e"
 }).appendTo(mainPage);
@@ -128,7 +128,7 @@ var GPSlabel = tabris.create("TextView",{
     id : "GPSlabel",
     font : "12px",
     textColor : "#fff",    
-    text : "GPS Info",
+    text : "GPS ინფო",
     layoutData : {left : 5, centerY :0 }
 }).appendTo(compositeGPS);
 
@@ -138,7 +138,7 @@ var GPSlabel = tabris.create("TextView",{
 // Data connection info //////////////////////////////////////////////////////////////////////////////
 
 var compositeData = tabris.create("Composite", {
-  	layoutData: {top: compositeGPS, width : screenWidth(1), height: screenHeight(9), centerX: 0},
+  	layoutData: {top: compositeGPS, width : screenWidth(1), centerX: 0},
 	id : "compositeData",
  	background: "#333232"
 }).appendTo(mainPage);
@@ -148,7 +148,7 @@ var Datalabel = tabris.create("TextView",{
     id : "GPSlabel",
     font : "12px",
     textColor : "#fff",    
-    text : "Data connection Info",
+    text : "ინტერნეტთან კავშირის ინფო",
     layoutData : {left : 5, centerY :0 }
 }).appendTo(compositeData);
 
@@ -224,7 +224,7 @@ tabris.app.on("backnavigation", function(app, options) {
 });
 
 
-// Calclulate widget dimentiones according to device scree size ///////////////////////////////////////////
+// Calclulate widget dimentiones according to device scree size ////////////////////////////////////////////////
 function screenWidth(x){
     var screenWidth = window.screen.width;
     return Math.round(screenWidth / x);	
@@ -271,7 +271,7 @@ removeBtn.on("select", function(){
     carIDLabel.set("text", "#?");
 });
 
-// End of event binding /////////////////////////////////////////////
+// End of event binding /////////////////////////////////////////////////////////////////////////////////////
 
 
 setInterval(function(){ 
@@ -294,7 +294,7 @@ function onDeviceOffline(){
 function onDeviceOnline(){    
     connectionStatus.data.connected = true;
     Datalabel.set("text", "ინტერნეტთან კავშირი: OK");
-    Datalabel.set("tectColor", "green");    
+    Datalabel.set("textColor", "green");    
 }
 
 
@@ -304,13 +304,13 @@ var onSuccess = function(position){
         connectionStatus.gps.lng = position.coords.longitude;
         connectionStatus.gps.connected = true;
 	
+        GPSlabel.set("textColor", "green");
         GPSlabel.set("text", position.coords.latitude+' - '+position.coords.longitude); 
-        GPSlabel.set("tectColor", "green");
-        //gpsImage.set("image", {src: "res/images/gps_fixed.png"});
-    
+
+        //gpsImage.set("image", {src: "res/images/gps_fixed.png"});    
 };
 
-// onError Callback receives a PositionError object /////////////////////////////////
+// onError Callback receives a PositionError object ////////////////////////////////////////////////////////
 
 function onError(error){
 	
@@ -322,8 +322,9 @@ function onError(error){
         connectionStatus.gps.connected = false;
         connectionStatus.gps.reason = error.code + " | " +error.message;
 
+        GPSlabel.set("textColor", "red");
         GPSlabel.set("text", "ჩართეთ GPS" + connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
-        GPSlabel.set("tectColor", "red");
+
         //gpsImage.set("image", {src: "res/images/gps_off.png"});
         
     }
@@ -333,10 +334,10 @@ function onError(error){
         connectionStatus.gps.connected = false;
         connectionStatus.gps.reason = error.code + " | " +error.message;        
 
+        GPSlabel.set("textColor", "yellow");
         GPSlabel.set("text", "GPS სიგნალის ძიება.. " + connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
-        GPSlabel.set("tectColor", "yellow");
+
         //gpsImage.set("image", {src: "res/images/gps_not_fixed.png"});        
-        
     }
 }
 
