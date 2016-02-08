@@ -30,9 +30,8 @@ function onDeviceReady(){
 }
 
 
-
-function checkDataConnection(){
-    
+// Check data connection on app startup. Listeners are not triggered on startup
+function checkDataConnection(){    
     if (navigator.connection.type == "Connection.NONE"){ onDeviceOffline() }
     else { onDeviceOnline() }    
 }
@@ -299,7 +298,7 @@ setInterval(function(){
 
 function onDeviceOffline(){    
     connectionStatus.data.connected = false;
-    dataLabel.set("text", "შეამოწმეთ ინტერნეტთან კავშირი");
+    dataLabel.set("text", "ინტერნეტ კავშირი: გამორთული");
     dataLabel.set("textColor", "#d02e2e");
 }
 
@@ -317,9 +316,9 @@ var onSuccess = function(position){
         connectionStatus.gps.connected = true;
 	
         GPSlabel.set("textColor", "#2edc5f");
-        GPSlabel.set("text", "GPS კავშირი : OK" + position.coords.latitude+' - '+position.coords.longitude); 
-
-        //gpsImage.set("image", {src: "res/images/gps_fixed.png"});    
+        GPSlabel.set("text", "GPS კავშირი : OK"); 
+        
+    label2.set("text", connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
 };
 
 // onError Callback receives a PositionError object ////////////////////////////////////////////////////////
@@ -335,10 +334,9 @@ function onError(error){
         connectionStatus.gps.reason = error.code + " | " +error.message;
 
         GPSlabel.set("textColor", "#d02e2e");
-        GPSlabel.set("text", "საჭიროა GPS-ის ჩართვა" + connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
-
-        //gpsImage.set("image", {src: "res/images/gps_off.png"});
+        GPSlabel.set("text", "GPS კავშირი : გამორთული");
         
+        label2.set("text", connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
     }
     else {
         connectionStatus.gps.lat = "--";
@@ -347,9 +345,9 @@ function onError(error){
         connectionStatus.gps.reason = error.code + " | " +error.message;        
 
         GPSlabel.set("textColor", "#dfb72d");
-        GPSlabel.set("text", "GPS სიგნალის ძიება.. " + connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
-
-        //gpsImage.set("image", {src: "res/images/gps_not_fixed.png"});        
+        GPSlabel.set("text", "GPS კავშირი: სიგნალის ძიება");
+        
+        label2.set("text", connectionStatus.gps.reason);
     }
 }
 
