@@ -391,14 +391,14 @@ function onDeviceOnline(){
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
 var onSuccess = function(position){
     
-        connectionStatus.gps.lat = position.coords.latitude;
-        connectionStatus.gps.lng = position.coords.longitude;
-        connectionStatus.gps.connected = true;
+    connectionStatus.gps.lat = position.coords.latitude;
+    connectionStatus.gps.lng = position.coords.longitude;
+    connectionStatus.gps.connected = true;
 	
-        GPSlabel.set("textColor", "#2edc5f");
-        GPSlabel.set("text", "GPS კავშირი : OK"); 
+    GPSlabel.set("textColor", "#2edc5f");
+    GPSlabel.set("text", "GPS კავშირი : OK"); 
         
-    label2.set("text", connectionStatus.gps.lat.toString() + " | " +connectionStatus.gps.lng.toString());
+    //label2.set("text", "ok");
     GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
 };
 
@@ -417,7 +417,7 @@ function onError(error){
         GPSlabel.set("textColor", "#d02e2e");
         GPSlabel.set("text", "GPS კავშირი : გამორთული");
         
-        label2.set("text", connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
+        //label2.set("text", connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
     }
     else {
         connectionStatus.gps.lat = "--";
@@ -428,8 +428,9 @@ function onError(error){
         GPSlabel.set("textColor", "#dfb72d");
         GPSlabel.set("text", "GPS კავშირი: სიგნალის ძიება");
         
-        label2.set("text", connectionStatus.gps.reason);
+        //label2.set("text", connectionStatus.gps.reason);
     }
+    
     GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
 }
 
