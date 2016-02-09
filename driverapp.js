@@ -36,8 +36,6 @@ function onDeviceReady(){
     document.addEventListener("offline", onDeviceOffline, false);
     document.addEventListener("online", onDeviceOnline, false);
     
-    getCurrentPos();
-    
 }
 
 
@@ -390,10 +388,6 @@ function onDeviceOnline(){
 }
 
 
-function getCurrentPos(){
-    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });   
-}
-
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
 var onSuccess = function(position){
         connectionStatus.gps.lat = position.coords.latitude;
@@ -441,6 +435,8 @@ function onError(error){
 
 // Check initial data connection    
 checkDataConnection();
+GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 }); 
+
 
 carID = localStorage.getItem("CarID");
 
