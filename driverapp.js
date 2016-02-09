@@ -13,6 +13,8 @@ var fontHeader = "50px";
 
 var colorDimmed = "#858383";
 
+var appURL = "http://tirisconi.com/taxi/insert_db_carinfo.php";
+
 // Curent car status. Set to "Free" (1) on start /////////////////////////
 var carStatus = 1;
 
@@ -26,12 +28,16 @@ var xhr = new tabris.XMLHttpRequest();
 // On Ready //////////////////////////////////////////////////////////////
 document.addEventListener("deviceready", onDeviceReady, false);
 
+
 function onDeviceReady(){
     window.plugins.insomnia.keepAwake();
     
     // Data connection listeners
     document.addEventListener("offline", onDeviceOffline, false);
-    document.addEventListener("online", onDeviceOnline, false);    
+    document.addEventListener("online", onDeviceOnline, false);
+    
+    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
+    
 }
 
 
@@ -43,7 +49,7 @@ function checkDataConnection(){
 
 // Object declarations ///////////////////////////////////////////////////
 
-tabris.create("Drawer").append(tabris.create("PageSelector"));
+tabris.create("Drawer").append(tabris.create("PageSelector",{background : "#d1d1d1", layoutData: {left: 0, top: 0, right: 0, bottom: 0}}));
 
 var mainPage = tabris.create("Page", {
     title: "მთავარი",
@@ -64,25 +70,25 @@ var updatePage = tabris.create("Page", {
 });
 
 var button = tabris.create("Button", {
-    id: "buttonFree",
+    id: "b1",
     class : "statusBtns",
     text: "თავისუფალი"    
 }).appendTo(mainPage);
 
 var button_1 = tabris.create("Button", {
-    id: "buttonOnWay",
+    id: "b3",
     class : "statusBtns",
     text: "გზაში"
 }).appendTo(mainPage);
 
 var button_2 = tabris.create("Button", {
-    id: "buttonBusy",
+    id: "b2",
     class : "statusBtns",
     text: "დაკავებული"
 }).appendTo(mainPage);
 
 var button_3 = tabris.create("Button", {
-    id: "buttonOffduty",
+    id: "b4",
     class : "statusBtns",
     text: "შესვენება"
 }).appendTo(mainPage);
@@ -174,7 +180,7 @@ var carIDInputLabel = tabris.create("TextView", {
 var carIDInput = tabris.create("TextInput", {
     id: "CarID",
     textColor : "#fff",
-    message: ""
+    keyboard : "number",
 }).appendTo(settingsPage);
 
 var carInputPassLabel = tabris.create("TextView", {
@@ -203,10 +209,10 @@ var removeBtn = tabris.create("Button", {
 
 //Page styling /////////////
 mainPage.apply({
-    "#buttonFree": {layoutData: {left: 0, height : screenHeight(6), bottom : 0, width :  screenWidth(2)}, background: "#2edc5f", alignment: "center", textColor : "#fff"},
-    "#buttonOnWay": {layoutData: {left: "#buttonFree -5", right : 0, baseline: "#buttonFree", height : screenHeight(6), width :  screenWidth(2)}, background: "#dfb72d", alignment: "center", opacity: 0.5},
-    "#buttonBusy": {layoutData: {left: 0, bottom: "#buttonFree -10", height : screenHeight(6), width :  screenWidth(2)}, background: "#d02e2e", alignment: "center", textColor : "#fff", opacity: 0.5},
-    "#buttonOffduty": {layoutData: {left: "#buttonBusy -5", right : 0, baseline: "#buttonBusy", height : screenHeight(6), width :  screenWidth(2)}, background: "#bababa", alignment: "center", opacity: 0.5},
+    "#b1": {layoutData: {left: 0, height : screenHeight(6), bottom : 0, width :  screenWidth(2)}, background: "#2edc5f", alignment: "center", textColor : "#fff"},
+    "#b3": {layoutData: {left: "#b1 -5", right : 0, baseline: "#b1", height : screenHeight(6), width :  screenWidth(2)}, background: "#dfb72d", alignment: "center", opacity: 0.5},
+    "#b2": {layoutData: {left: 0, bottom: "#b1 -10", height : screenHeight(6), width :  screenWidth(2)}, background: "#d02e2e", alignment: "center", textColor : "#fff", opacity: 0.5},
+    "#b4": {layoutData: {left: "#b2 -5", right : 0, baseline: "#b2", height : screenHeight(6), width :  screenWidth(2)}, background: "#bababa", alignment: "center", opacity: 0.5},
 });
 
 settingsPage.apply({
@@ -226,37 +232,50 @@ settingsPage.apply({
 
 // Event binding ///////////////////////////////////////////////////////////////////////////////////////////////
 
-function sendStatus(){
+function sendStatus(status, lat, lng){
     
-    xhr.onreadystatechange = function() {
-        if(xhr.readyState === xhr.DONE) {
-            if(xhr.status === 200) {
-               
-                var x = JSON.parse(xhr.responseText);
-                testLabel.set("text", x[0].origin);    
-
-            } else {
-
-                testLabel.set("text", xhr.status);
+    var status = status;
+    var lat = lat;
+    var lng = lng;
+    
+    
+    var s = appURL + "?key=" + masterKey + "&carn=" + carID + "&status=" + status + "&lat=" + lat + "&lng=" + lng ; 
+    
+        xhr.open("GET", s);
+        xhr.send();
+    
+        xhr.onreadystatechange = function() {
+            
+            if(xhr.readyState === xhr.DONE) {
                 
-            }
+                if(xhr.status === 200) {
+                    var x = JSON.parse(xhr.responseText);
+                    testLabel.set("text", x.key);    
 
-                testLabel.set("opacity", 1);                
-                testLabel.animate(
-                    { opacity: 0.0 }, 
-                    { delay: 2000,
-                    duration: 500,
-                    repeat: 0,
-                    reverse: false,
-                    easing: "ease-out"
-                    }
-                )            
+                } else {
+                    testLabel.set("text", xhr.status);                
+                }         
+            }   
+            
+        }//xhr.onreadystatechange    
+
+    animateObject(testLabel); 
+
+}
+
+
+function animateObject (myObject){
+    
+    myObject.set("opacity", 1);            
+    myObject.animate(
+        { opacity: 0.0 }, 
+        {   delay: 0,
+            duration: 2000,
+            repeat: 0,
+            reverse: false,
+            easing: "ease-in-out"
         }
-    }
-
-    xhr.open("GET", "http://tirisconi.com/taxi/insert_db_carstatus.php");
-    xhr.send();
-
+    )    
 }
 
 
@@ -298,33 +317,44 @@ tabris.device.on("change:orientation", function(device, orientation) {
 
 tabris.ui.find(".statusBtns").on("select", function(widget) {    
     
+    //check if carID is set and GPS and data connection is available, before attempting to send car status
+    if ((carID !="") && (connectionStatus.gps.connected === true) && (connectionStatus.data.connected === true) ){    
+        
+        tabris.ui.find(".statusBtns").set("opacity", 0.5);
+        tabris.ui.find(".statusBtns").set("font", "16px");
     
-    tabris.ui.find(".statusBtns").set("opacity", 0.5);
-    tabris.ui.find(".statusBtns").set("font", "16px");
+        this.set("opacity", 1);
+        this.set("font", "bold 16px");
     
-    this.set("opacity", 1);
-    this.set("font", "bold 16px");
+        carStatus = this.get("id");
     
-    testLabel.set("text", "");
-    sendStatus();
+        //Extract substring for status. eg "b2" >> "2"
+        var status = carStatus.substring(1, 2);
+        sendStatus(status,"","");
     
+    }
 });
 
 
 submitBtn.on("select", function(){    
     
-    if (carInputPass.get("text") == masterPassword) {
+    if ((carInputPass.get("text") == masterPassword) && (carIDInput.get("text") != "")) {
         carInputPass.set("background", "white");
+        carIDInput.set("background", "white");
+        
         myStorage.setItem("CarID",carIDInput.get("text"));
         carIDLabel.set("text", "#" + carIDInput.get("text"))
-        carIDInput.set("text", "");
+        carID =  carIDInput.get("text");
+        
         mainPage.open();
     }
-    else{        
-        carInputPass.set("text" , "");
-        carInputPass.set("background", "red");        
+    else{
+        carInputPass.set("background", "red");
+        carIDInput.set("background", "red");        
     }
     
+    carIDInput.set("text" , ""); 
+    carInputPass.set("text" , "");
     
 });
 
@@ -337,7 +367,7 @@ removeBtn.on("select", function(){
 
 
 setInterval(function(){ 
-    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 1000 }); // increase timeout
+    //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 1000 }); // increase timeout
 
     // For tests /////////////////////////
     myTimer+=1; 
@@ -370,6 +400,7 @@ var onSuccess = function(position){
         GPSlabel.set("text", "GPS კავშირი : OK"); 
         
     label2.set("text", connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
+    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
 };
 
 // onError Callback receives a PositionError object ////////////////////////////////////////////////////////
@@ -400,6 +431,7 @@ function onError(error){
         
         label2.set("text", connectionStatus.gps.reason);
     }
+    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
 }
 
 
