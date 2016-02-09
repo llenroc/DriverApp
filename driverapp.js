@@ -390,6 +390,7 @@ function onDeviceOnline(){
 
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
 var onSuccess = function(position){
+    
         connectionStatus.gps.lat = position.coords.latitude;
         connectionStatus.gps.lng = position.coords.longitude;
         connectionStatus.gps.connected = true;
@@ -397,7 +398,7 @@ var onSuccess = function(position){
         GPSlabel.set("textColor", "#2edc5f");
         GPSlabel.set("text", "GPS კავშირი : OK"); 
         
-    label2.set("text", connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
+    label2.set("text", connectionStatus.gps.lat.toString() + " | " +connectionStatus.gps.lng.toString());
     GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
 };
 
