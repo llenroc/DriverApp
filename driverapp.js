@@ -398,7 +398,7 @@ var onSuccess = function(position){
         GPSlabel.set("text", "GPS კავშირი : OK"); 
         
     label2.set("text", connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
-
+    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
 };
 
 // onError Callback receives a PositionError object ////////////////////////////////////////////////////////
@@ -429,7 +429,7 @@ function onError(error){
         
         label2.set("text", connectionStatus.gps.reason);
     }
-
+    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
 }
 
 
