@@ -25,6 +25,10 @@ var connectionStatus = {
 
 var xhr = new tabris.XMLHttpRequest();
 
+//For GPS . https://github.com/apache/cordova-plugin-geolocation
+var watchID = null;
+
+
 // On Ready //////////////////////////////////////////////////////////////
 document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -35,6 +39,10 @@ function onDeviceReady(){
     // Data connection listeners
     document.addEventListener("offline", onDeviceOffline, false);
     document.addEventListener("online", onDeviceOnline, false);
+    
+    watchId = navigator.geolocation.watchPosition(onSuccess, onError, { timeout: 5000, enableHighAccuracy: true });
+    //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 }); 
+    
     
 }
 
@@ -132,13 +140,6 @@ var carIDLabel = tabris.create("TextView",{
 
 // Data & Gps info row //////////////////////////////////////////////////////////////////////////////////////
 
-//var gpsImage = tabris.create("ImageView", {
-//    layoutData: {top : 1, left : 5, centerY: 0},
-//    image : { src : "res/images/gps_not_fixed.png"},
-//    id: "gpsImage"
-//}).appendTo(compositeGPS);
-
-
 var compositeGPSData = tabris.create("Composite", {
   	layoutData: {top: [compositeCarID, -1], width : screenWidth(1), height: screenHeight(8), centerX: 0},
 	id : "compositeGPSData",
@@ -225,9 +226,6 @@ settingsPage.apply({
 // End of Page styling /////////////////////////////////////////////////////////////////////////////////////////
 
  
-// End of object declarations //////////////////////////////////////////////////////////////////////////////////
-
-
 // Event binding ///////////////////////////////////////////////////////////////////////////////////////////////
 
 function sendStatus(status, lat, lng){
@@ -430,15 +428,12 @@ function onError(error){
         
         label2.set("text", connectionStatus.gps.reason);
     }
-    
-    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
+
 }
 
 
 // Check initial data connection    
 checkDataConnection();
-GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 }); 
-
 
 carID = localStorage.getItem("CarID");
 
