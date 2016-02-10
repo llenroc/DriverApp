@@ -367,8 +367,8 @@ setInterval(function(){
     //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 1000 }); // increase timeout
 
     // For tests /////////////////////////
-    myTimer+=1; 
-    label2.set("text", myTimer.toString())
+    //myTimer+=1; 
+    //label2.set("text", myTimer.toString())
     //////////////////////////////////////
     
 }, 5000);
@@ -415,7 +415,7 @@ function onError(error){
         GPSlabel.set("textColor", "#d02e2e");
         GPSlabel.set("text", "GPS კავშირი : გამორთული");
         
-        label2.set("text", connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
+        label2.set("text", connectionStatus.gps.reason + " --- " + myTimer);
     }
     else {
         connectionStatus.gps.lat = "--";
@@ -426,11 +426,12 @@ function onError(error){
         GPSlabel.set("textColor", "#dfb72d");
         GPSlabel.set("text", "GPS კავშირი: სიგნალის ძიება");
         
-        label2.set("text", connectionStatus.gps.reason);
-        
-        watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
+        label2.set("text", connectionStatus.gps.reason + " --- " + myTimer);
     }
 
+    myTimer+=1; 
+    
+    watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
 }
 
 
