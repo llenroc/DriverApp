@@ -366,12 +366,13 @@ removeBtn.on("select", function(){
 setInterval(function(){ 
     //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 1000 }); // increase timeout
 
+    watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
     // For tests /////////////////////////
-    //myTimer+=1; 
-    //label2.set("text", myTimer.toString())
+    myTimer+=1; 
+    label2.set("text", myTimer.toString())
     //////////////////////////////////////
     
-}, 5000);
+}, 10000);
 
 
 function onDeviceOffline(){    
@@ -428,17 +429,11 @@ function onError(error){
         
         label2.set("text", connectionStatus.gps.reason + " --- " + myTimer);
     }
-
-    myTimer+=1; 
-    
-    watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
 }
 
 
 // Check initial data connection    
 checkDataConnection();
-
-watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
 
 carID = localStorage.getItem("CarID");
 
