@@ -34,7 +34,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 
 function onDeviceReady(){
-    //window.plugins.insomnia.keepAwake();
+    window.plugins.insomnia.keepAwake();
     
     // Data connection listeners
     document.addEventListener("offline", onDeviceOffline, false);
@@ -427,6 +427,8 @@ function onError(error){
         GPSlabel.set("text", "GPS კავშირი: სიგნალის ძიება");
         
         label2.set("text", connectionStatus.gps.reason);
+        
+        watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
     }
 
 }
@@ -434,6 +436,7 @@ function onError(error){
 
 // Check initial data connection    
 checkDataConnection();
+
 watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
 
 carID = localStorage.getItem("CarID");
