@@ -39,8 +39,6 @@ function onDeviceReady(){
     // Data connection listeners
     document.addEventListener("offline", onDeviceOffline, false);
     document.addEventListener("online", onDeviceOnline, false);
-    
-    watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
 }
 
 
@@ -436,6 +434,7 @@ function onError(error){
 
 // Check initial data connection    
 checkDataConnection();
+watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
 
 carID = localStorage.getItem("CarID");
 
