@@ -30,7 +30,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 
 function onDeviceReady(){
-    window.plugins.insomnia.keepAwake();
+    //window.plugins.insomnia.keepAwake();
     
     // Data connection listeners
     document.addEventListener("offline", onDeviceOffline, false);
@@ -316,7 +316,7 @@ tabris.device.on("change:orientation", function(device, orientation) {
 tabris.ui.find(".statusBtns").on("select", function(widget) {    
     
     //check if carID is set and GPS and data connection is available, before attempting to send car status
-    if ((carID !="") && (connectionStatus.gps.connected === true) && (connectionStatus.data.connected === true) ){    
+    if ((carID !="") && (connectionStatus.gps.connected == true) && (connectionStatus.data.connected == true) ){    
         
         tabris.ui.find(".statusBtns").set("opacity", 0.5);
         tabris.ui.find(".statusBtns").set("font", "16px");
@@ -398,8 +398,8 @@ var onSuccess = function(position){
     GPSlabel.set("textColor", "#2edc5f");
     GPSlabel.set("text", "GPS კავშირი : OK"); 
         
-    //label2.set("text", "ok");
-    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
+    label2.set("text", "ok");
+    //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
 };
 
 // onError Callback receives a PositionError object ////////////////////////////////////////////////////////
@@ -417,7 +417,7 @@ function onError(error){
         GPSlabel.set("textColor", "#d02e2e");
         GPSlabel.set("text", "GPS კავშირი : გამორთული");
         
-        //label2.set("text", connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
+        label2.set("text", connectionStatus.gps.lat + " | " +connectionStatus.gps.lng);
     }
     else {
         connectionStatus.gps.lat = "--";
@@ -428,16 +428,16 @@ function onError(error){
         GPSlabel.set("textColor", "#dfb72d");
         GPSlabel.set("text", "GPS კავშირი: სიგნალის ძიება");
         
-        //label2.set("text", connectionStatus.gps.reason);
+        label2.set("text", connectionStatus.gps.reason);
     }
     
-    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
+    //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
 }
 
 
 // Check initial data connection    
 checkDataConnection();
-GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 }); 
+//GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 }); 
 
 
 carID = localStorage.getItem("CarID");
