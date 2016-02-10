@@ -437,7 +437,7 @@ function onError(error){
 
 // Check initial data connection    
 checkDataConnection();
-//GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 }); 
+GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 }); 
 
 
 carID = localStorage.getItem("CarID");
