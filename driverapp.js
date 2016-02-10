@@ -431,7 +431,7 @@ function onError(error){
         label2.set("text", connectionStatus.gps.reason);
     }
     
-    //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
+    GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
 }
 
 
