@@ -40,10 +40,7 @@ function onDeviceReady(){
     document.addEventListener("offline", onDeviceOffline, false);
     document.addEventListener("online", onDeviceOnline, false);
     
-    watchID = GPSLocation.watchPosition(onSuccess, onError, { timeout: 5000});
-    //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 }); 
-    
-    
+    watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
 }
 
 
@@ -403,7 +400,6 @@ var onSuccess = function(position){
     GPSlabel.set("text", "GPS კავშირი : OK"); 
         
     label2.set("text", "ok");
-    //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 });
 };
 
 // onError Callback receives a PositionError object ////////////////////////////////////////////////////////
