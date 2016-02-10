@@ -40,7 +40,7 @@ function onDeviceReady(){
     document.addEventListener("offline", onDeviceOffline, false);
     document.addEventListener("online", onDeviceOnline, false);
     
-    watchId = navigator.geolocation.watchPosition(onSuccess, onError, { timeout: 5000, enableHighAccuracy: true });
+    watchID = GPSLocation.watchPosition(onSuccess, onError, { timeout: 5000});
     //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 5000 }); 
     
     
@@ -255,8 +255,7 @@ function sendStatus(status, lat, lng){
             
         }//xhr.onreadystatechange    
 
-    animateObject(testLabel); 
-
+    animateObject(testLabel);
 }
 
 
@@ -326,8 +325,7 @@ tabris.ui.find(".statusBtns").on("select", function(widget) {
     
         //Extract substring for status. eg "b2" >> "2"
         var status = carStatus.substring(1, 2);
-        sendStatus(status,"","");
-    
+        sendStatus(status,"","");    
     }
 });
 
@@ -355,8 +353,16 @@ submitBtn.on("select", function(){
 });
 
 removeBtn.on("select", function(){    
-    myStorage.removeItem("CarID");
-    carIDLabel.set("text", "#?");
+    if (carInputPass.get("text") == masterPassword) { 
+        myStorage.removeItem("CarID");
+        carIDLabel.set("text", "#?");
+        carInputPass.set("background", "white");
+    }
+    else{
+        carInputPass.set("background", "red"); 
+    }
+    
+    
 });
 
 // End of event binding /////////////////////////////////////////////////////////////////////////////////////
