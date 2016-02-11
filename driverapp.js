@@ -302,8 +302,8 @@ tabris.app.on("backnavigation", function(app, options) {
                             tabris.ui.find(".statusBtns").set("opacity", 0.5);
                             tabris.ui.find(".statusBtns").set("font", "16px");
                             
-                            GPSLocation.clearWatch(watchID);
-                            clearInterval(refreshIntervalId);
+                            //GPSLocation.clearWatch(watchID);
+                            //clearInterval(refreshIntervalId);
                         }
                         
                     });
