@@ -362,7 +362,14 @@ removeBtn.on("select", function(){
 
 
 setInterval(function(){ 
-
+    
+    //Send Lat/long if GPS is available. Need to be shifted to separate procedure
+    if (connectionStatus.gps.connected){
+     
+        sendStatus("", connectionStatus.gps.lat, connectionStatus.gps.lng);
+        
+    }
+    
     watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
     // For tests /////////////////////////
     myTimer+=1; 
