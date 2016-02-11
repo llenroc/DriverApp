@@ -360,7 +360,7 @@ tabris.ui.find(".statusBtns").on("select", function(widget) {
         //Extract substring for status. eg "b2" >> "2"
         var status = carStatus.substring(1, 2);
         buttonClicked = true;
-        sendStatus(status,"","",function (result));
+        sendStatus(status,"","",function (result){});
     }
 });
 
@@ -406,7 +406,7 @@ var refreshIntervalId = setInterval(function(){
     //Send Lat/long if GPS is available. Need to be shifted to separate procedure
     if ((connectionStatus.gps.connected) && (connectionStatus.data.connected)){
      
-        sendStatus("", connectionStatus.gps.lat, connectionStatus.gps.lng,function (result));        
+        sendStatus("", connectionStatus.gps.lat, connectionStatus.gps.lng,function (result){});        
     }
     
     watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
