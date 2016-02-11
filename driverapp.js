@@ -34,7 +34,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 
 function onDeviceReady(){
-    window.plugins.insomnia.keepAwake();
+    //window.plugins.insomnia.keepAwake();
     
     // Data connection listeners
     document.addEventListener("offline", onDeviceOffline, false);
@@ -241,7 +241,7 @@ function sendStatus(status, lat, lng){
                 
                 if(xhr.status === 200) {
                     var x = JSON.parse(xhr.responseText);
-                    testLabel.set("text", x.key);    
+                    testLabel.set("text", x.result);    
 
                 } else {
                     testLabel.set("text", xhr.status);                
@@ -355,16 +355,13 @@ removeBtn.on("select", function(){
     }
     else{
         carInputPass.set("background", "red"); 
-    }
-    
-    
+    }    
 });
 
 // End of event binding /////////////////////////////////////////////////////////////////////////////////////
 
 
 setInterval(function(){ 
-    //GPSLocation.getCurrentPosition(onSuccess, onError, { timeout: 1000 }); // increase timeout
 
     watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
     // For tests /////////////////////////
@@ -372,7 +369,7 @@ setInterval(function(){
     label2.set("text", myTimer.toString())
     //////////////////////////////////////
     
-}, 10000);
+}, 6000);
 
 
 function onDeviceOffline(){    
@@ -398,7 +395,7 @@ var onSuccess = function(position){
     GPSlabel.set("textColor", "#2edc5f");
     GPSlabel.set("text", "GPS კავშირი : OK"); 
         
-    label2.set("text", "ok");
+    label2.set("text", connectionStatus.gps.lat + " | " + connectionStatus.gps.lng);
 };
 
 // onError Callback receives a PositionError object ////////////////////////////////////////////////////////
@@ -434,7 +431,6 @@ function onError(error){
 
 // Check initial data connection    
 checkDataConnection();
-
 carID = localStorage.getItem("CarID");
 
 if (carID) { carIDLabel.set("text", "#" + carID); mainPage.open();}
