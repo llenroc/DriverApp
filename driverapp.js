@@ -8,6 +8,8 @@ var myTimer = 0;
 var carID;
 var myStorage = localStorage;
 
+var buttonClicked = false;
+
 var fontSmall = "18px";
 var fontHeader = "50px";
 
@@ -52,6 +54,14 @@ function checkDataConnection(){
 
 tabris.create("Drawer").append(tabris.create("PageSelector",{background : "#d1d1d1", layoutData: {left: 0, top: 0, right: 0, bottom: 0}}));
 
+
+var startPage = tabris.create("Page", {
+    title: "საწყისი გვერდი",
+    background: "#000",
+    topLevel: true
+});
+
+
 var mainPage = tabris.create("Page", {
     title: "მთავარი",
     background: "#000",
@@ -79,7 +89,8 @@ var button = tabris.create("Button", {
 var button_1 = tabris.create("Button", {
     id: "b3",
     class : "statusBtns",
-    text: "გზაში"
+    text: "გზაში",
+    disabled : "true"
 }).appendTo(mainPage);
 
 var button_2 = tabris.create("Button", {
@@ -203,7 +214,7 @@ var removeBtn = tabris.create("Button", {
 
 //Page styling /////////////
 mainPage.apply({
-    "#b1": {layoutData: {left: 0, height : screenHeight(6), bottom : 0, width :  screenWidth(2)}, background: "#2edc5f", alignment: "center", textColor : "#fff"},
+    "#b1": {layoutData: {left: 0, height : screenHeight(6), bottom : 0, width :  screenWidth(2)}, background: "#2edc5f", alignment: "center", textColor : "#fff", opacity: 0.5},
     "#b3": {layoutData: {left: "#b1 -5", right : 0, baseline: "#b1", height : screenHeight(6), width :  screenWidth(2)}, background: "#dfb72d", alignment: "center", opacity: 0.5},
     "#b2": {layoutData: {left: 0, bottom: "#b1 -10", height : screenHeight(6), width :  screenWidth(2)}, background: "#d02e2e", alignment: "center", textColor : "#fff", opacity: 0.5},
     "#b4": {layoutData: {left: "#b2 -5", right : 0, baseline: "#b2", height : screenHeight(6), width :  screenWidth(2)}, background: "#bababa", alignment: "center", opacity: 0.5},
@@ -223,7 +234,7 @@ settingsPage.apply({
  
 // Event binding ///////////////////////////////////////////////////////////////////////////////////////////////
 
-function sendStatus(status, lat, lng){
+function sendStatus(status, lat, lng, callback){
     
     var status = status;
     var lat = lat;
@@ -240,16 +251,18 @@ function sendStatus(status, lat, lng){
             if(xhr.readyState === xhr.DONE) {
                 
                 if(xhr.status === 200) {
+
                     var x = JSON.parse(xhr.responseText);
-                    testLabel.set("text", x.result);    
+                    testLabel.set("text", x.result);
+                    callback (true);
 
                 } else {
                     testLabel.set("text", xhr.status);                
                 }         
             }   
-            
+            buttonClicked = false;            
         }//xhr.onreadystatechange    
-
+   
     animateObject(testLabel);
 }
 
@@ -271,8 +284,34 @@ function animateObject (myObject){
 
 //Override native back button action
 tabris.app.on("backnavigation", function(app, options) {
-    //options.preventDefault = true;
-    //do something else than closing the page
+    
+    if (tabris.ui.get("activePage")!= startPage) {
+    
+        options.preventDefault = true;        
+        
+        navigator.notification.confirm(
+            'გსურთ დაასრულოთ მუშაობა?',
+            function(buttonIndex) {
+                if (buttonIndex == 1) {
+
+                    //If XMLHTTP request successful callback (status set to 5=offDuty) then go to start page.
+                    sendStatus(5,"","",function (result){   
+                        
+                        if (result) { 
+                            startPage.open(); 
+                            tabris.ui.find(".statusBtns").set("opacity", 0.5);
+                            tabris.ui.find(".statusBtns").set("font", "16px");
+                            
+                            GPSLocation.clearWatch(watchID);
+                            clearInterval(refreshIntervalId);
+                        }
+                        
+                    });
+                }
+            }, 'Exit', ['დიახ','არა']
+        );
+    
+    }
 });
 
 
@@ -308,7 +347,7 @@ tabris.device.on("change:orientation", function(device, orientation) {
 tabris.ui.find(".statusBtns").on("select", function(widget) {    
     
     //check if carID is set and GPS and data connection is available, before attempting to send car status
-    if ((carID !="") && (connectionStatus.gps.connected == true) && (connectionStatus.data.connected == true) ){    
+    if ((carID !="") && (connectionStatus.data.connected == true) && (!buttonClicked)){    
         
         tabris.ui.find(".statusBtns").set("opacity", 0.5);
         tabris.ui.find(".statusBtns").set("font", "16px");
@@ -320,7 +359,8 @@ tabris.ui.find(".statusBtns").on("select", function(widget) {
     
         //Extract substring for status. eg "b2" >> "2"
         var status = carStatus.substring(1, 2);
-        sendStatus(status,"","");    
+        buttonClicked = true;
+        sendStatus(status,"","");
     }
 });
 
@@ -361,22 +401,22 @@ removeBtn.on("select", function(){
 // End of event binding /////////////////////////////////////////////////////////////////////////////////////
 
 
-setInterval(function(){ 
+var refreshIntervalId = setInterval(function(){ 
     
     //Send Lat/long if GPS is available. Need to be shifted to separate procedure
-    if (connectionStatus.gps.connected){
+    if ((connectionStatus.gps.connected) && (connectionStatus.data.connected)){
      
-        sendStatus("", connectionStatus.gps.lat, connectionStatus.gps.lng);
-        
+        sendStatus("", connectionStatus.gps.lat, connectionStatus.gps.lng);        
     }
     
     watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
     // For tests /////////////////////////
+    
     myTimer+=1; 
     label2.set("text", myTimer.toString())
     //////////////////////////////////////
     
-}, 6000);
+}, 15000);
 
 
 function onDeviceOffline(){    
