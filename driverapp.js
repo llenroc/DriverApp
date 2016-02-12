@@ -235,7 +235,7 @@ settingsPage.apply({
 // Event binding ///////////////////////////////////////////////////////////////////////////////////////////////
 
 function sendStatus(status, lat, lng, callback){
-
+	console.log('SendStatus - '+Math.floor(Date.now() / 1000).toString());
     var s = appURL + "?key=" + masterKey + "&carn=" + carID + "&status=" + status + "&lat=" + lat + "&lng=" + lng; 
     
         xhr.open("GET", s);
@@ -244,7 +244,7 @@ function sendStatus(status, lat, lng, callback){
         xhr.onreadystatechange = function() {
             
             if(xhr.readyState === xhr.DONE) {
-                
+                console.log('xhr.DONE | Status: '+xhr.status.toString()+' - '+Math.floor(Date.now() / 1000).toString());
                 if(xhr.status === 200) {
 
                     var x = JSON.parse(xhr.responseText);
@@ -263,7 +263,7 @@ function sendStatus(status, lat, lng, callback){
 
 
 function animateObject (myObject){
-    
+    console.log('animateObject - '+Math.floor(Date.now() / 1000).toString());
     myObject.set("opacity", 1);            
     myObject.animate(
         { opacity: 0.0 }, 
@@ -340,7 +340,7 @@ tabris.device.on("change:orientation", function(device, orientation) {
 
 
 tabris.ui.find(".statusBtns").on("select", function(widget) {    
-    
+    console.log('tabris.ui.find - '+Math.floor(Date.now() / 1000).toString());
     //check if carID is set and GPS and data connection is available, before attempting to send car status
     if ((carID !="") && (connectionStatus.data.connected == true) && (!buttonClicked)){    
         
@@ -407,6 +407,7 @@ var lastCoordTime = 0;
 var GPSsendTimeOut = 15;
 
 function gpsReq(){
+	console.log('gpsReq - '+Math.floor(Date.now() / 1000).toString());
 	watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
 }
 
@@ -427,13 +428,15 @@ function gpsReq(){
 }*/
 
 
-function onDeviceOffline(){    
+function onDeviceOffline(){
+	console.log('onDeviceOffline - '+Math.floor(Date.now() / 1000).toString());
     connectionStatus.data.connected = false;
     dataLabel.set("text", "ინტერნეტ კავშირი: გამორთული");
     dataLabel.set("textColor", "#d02e2e");
 }
 
 function onDeviceOnline(){    
+	console.log('onDeviceOnline - '+Math.floor(Date.now() / 1000).toString());
     connectionStatus.data.connected = true;
     dataLabel.set("text", "ინტერნეტ კავშირი: OK");
     dataLabel.set("textColor", "#2edc5f");    
@@ -442,6 +445,7 @@ function onDeviceOnline(){
 
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
 var onSuccess = function(position){
+	console.log('onSuccess - '+Math.floor(Date.now() / 1000).toString());
 	var currentTime = Math.floor(Date.now() / 1000);
 	
     connectionStatus.gps.lat = position.coords.latitude;
@@ -466,6 +470,7 @@ function onError(error){
     /////////////////////// Code 2 - GPS off, Code 3 - Timeout  /////////////////////
     
     if (error.code == 2){
+		console.log('onError 2 - '+Math.floor(Date.now() / 1000).toString());
 		setTimeout(gpsReq, 5000);
         connectionStatus.gps.lat = "--";
         connectionStatus.gps.lng = "--";
@@ -478,6 +483,7 @@ function onError(error){
         label2.set("text", connectionStatus.gps.reason + " --- " + myTimer);
     }
     else {
+		console.log('onError else - '+Math.floor(Date.now() / 1000).toString());
         connectionStatus.gps.lat = "--";
         connectionStatus.gps.lng = "--";
         connectionStatus.gps.connected = false;
