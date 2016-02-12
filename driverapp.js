@@ -235,13 +235,8 @@ settingsPage.apply({
 // Event binding ///////////////////////////////////////////////////////////////////////////////////////////////
 
 function sendStatus(status, lat, lng, callback){
-    
-    var status = status;
-    var lat = lat;
-    var lng = lng;
-    
-    
-    var s = appURL + "?key=" + masterKey + "&carn=" + carID + "&status=" + status + "&lat=" + lat + "&lng=" + lng ; 
+
+    var s = appURL + "?key=" + masterKey + "&carn=" + carID + "&status=" + status + "&lat=" + lat + "&lng=" + lng; 
     
         xhr.open("GET", s);
         xhr.send();
@@ -401,22 +396,35 @@ removeBtn.on("select", function(){
 // End of event binding /////////////////////////////////////////////////////////////////////////////////////
 
 
-var refreshIntervalId = setInterval(function(){ 
+/*var refreshIntervalId = setInterval(function(){ 
     
-    //Send Lat/long if GPS is available. Need to be shifted to separate procedure
+    
+    
+}, 15000);*/
+
+
+var lastCoordTime = 0;
+var GPSsendTimeOut = 15;
+
+function gpsReq(){
+	watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
+}
+
+
+/*function reqPosition(){
+	//Send Lat/long if GPS is available. Need to be shifted to separate procedure
     if ((connectionStatus.gps.connected) && (connectionStatus.data.connected)){
      
-        sendStatus("", connectionStatus.gps.lat, connectionStatus.gps.lng,function (result){});        
+                
     }
     
-    watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
+    
     // For tests /////////////////////////
     
     myTimer+=1; 
     label2.set("text", myTimer.toString())
     //////////////////////////////////////
-    
-}, 15000);
+}*/
 
 
 function onDeviceOffline(){    
@@ -434,12 +442,18 @@ function onDeviceOnline(){
 
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
 var onSuccess = function(position){
-    
+	var currentTime = Math.floor(Date.now() / 1000);
+	
     connectionStatus.gps.lat = position.coords.latitude;
     connectionStatus.gps.lng = position.coords.longitude;
     connectionStatus.gps.connected = true;
 	
-    GPSlabel.set("textColor", "#2edc5f");
+	if(currentTime-lastCoordTime>GPSsendTimeOut){
+		lastCoordTime = currentTime;
+		sendStatus("", connectionStatus.gps.lat, connectionStatus.gps.lng, function(result){});
+	}
+	
+	GPSlabel.set("textColor", "#2edc5f");
     GPSlabel.set("text", "GPS კავშირი : OK"); 
         
     label2.set("text", connectionStatus.gps.lat + " | " + connectionStatus.gps.lng);
@@ -451,7 +465,8 @@ function onError(error){
 	
     /////////////////////// Code 2 - GPS off, Code 3 - Timeout  /////////////////////
     
-    if (error.code == 2){    
+    if (error.code == 2){
+		setTimeout(gpsReq, 5000);
         connectionStatus.gps.lat = "--";
         connectionStatus.gps.lng = "--";
         connectionStatus.gps.connected = false;
@@ -478,6 +493,7 @@ function onError(error){
 
 // Check initial data connection    
 checkDataConnection();
+gpsReq();
 carID = localStorage.getItem("CarID");
 
 if (carID) { carIDLabel.set("text", "#" + carID); mainPage.open();}
