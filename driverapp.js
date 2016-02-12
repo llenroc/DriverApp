@@ -471,7 +471,7 @@ function onError(error){
     
     if (error.code == 2){
 		console.log('onError 2 - '+Math.floor(Date.now() / 1000).toString());
-		setTimeout(gpsReq, 5000);
+		//setTimeout(gpsReq, 5000);
         connectionStatus.gps.lat = "--";
         connectionStatus.gps.lng = "--";
         connectionStatus.gps.connected = false;
