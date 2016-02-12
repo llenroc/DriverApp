@@ -408,7 +408,7 @@ var GPSsendTimeOut = 15;
 
 function gpsReq(){
 	console.log('gpsReq - '+Math.floor(Date.now() / 1000).toString());
-	watchID = GPSLocation.watchPosition(onSuccess, onError, {timeout: 5000});
+	watchID = GPSLocation.watchPosition(onSuccess, onError, {maximumAge: 5000, timeout: 5000});
 }
 
 
