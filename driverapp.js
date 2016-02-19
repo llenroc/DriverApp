@@ -15,7 +15,7 @@ var fontHeader = "50px";
 
 var colorDimmed = "#858383";
 
-var appURL = "http://tirisconi.com/taxi/insert_db_carinfo.php";
+var appURL = "http://51.254.206.31/taxi/insert_db_carinfo.php";
 
 // Curent car status. Set to "Free" (1) on start /////////////////////////
 var carStatus = 1;
@@ -36,7 +36,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 
 function onDeviceReady(){
-    //window.plugins.insomnia.keepAwake();
+    window.plugins.insomnia.keepAwake();
     
     // Data connection listeners
     document.addEventListener("offline", onDeviceOffline, false);
@@ -235,7 +235,7 @@ settingsPage.apply({
 // Event binding ///////////////////////////////////////////////////////////////////////////////////////////////
 
 function sendStatus(status, lat, lng, callback){
-	console.log('SendStatus - '+Math.floor(Date.now() / 1000).toString());
+
     var s = appURL + "?key=" + masterKey + "&carn=" + carID + "&status=" + status + "&lat=" + lat + "&lng=" + lng; 
     
         xhr.open("GET", s);
@@ -263,7 +263,6 @@ function sendStatus(status, lat, lng, callback){
 
 
 function animateObject (myObject){
-    console.log('animateObject - '+Math.floor(Date.now() / 1000).toString());
     myObject.set("opacity", 1);            
     myObject.animate(
         { opacity: 0.0 }, 
@@ -293,7 +292,8 @@ tabris.app.on("backnavigation", function(app, options) {
                     sendStatus(5,"","",function (result){   
                         
                         if (result) { 
-                            startPage.open(); 
+                            startPage.open();
+                            options.preventDefault = false;
                             tabris.ui.find(".statusBtns").set("opacity", 0.5);
                             tabris.ui.find(".statusBtns").set("font", "16px");
                             
@@ -340,7 +340,7 @@ tabris.device.on("change:orientation", function(device, orientation) {
 
 
 tabris.ui.find(".statusBtns").on("select", function(widget) {    
-    console.log('tabris.ui.find - '+Math.floor(Date.now() / 1000).toString());
+
     //check if carID is set and GPS and data connection is available, before attempting to send car status
     if ((carID !="") && (connectionStatus.data.connected == true) && (!buttonClicked)){    
         
@@ -396,47 +396,21 @@ removeBtn.on("select", function(){
 // End of event binding /////////////////////////////////////////////////////////////////////////////////////
 
 
-/*var refreshIntervalId = setInterval(function(){ 
-    
-    
-    
-}, 15000);*/
-
-
 var lastCoordTime = 0;
 var GPSsendTimeOut = 15;
 
 function gpsReq(){
-	console.log('gpsReq - '+Math.floor(Date.now() / 1000).toString());
 	watchID = GPSLocation.watchPosition(onSuccess, onError, {maximumAge: 5000, timeout: 5000});
 }
 
 
-/*function reqPosition(){
-	//Send Lat/long if GPS is available. Need to be shifted to separate procedure
-    if ((connectionStatus.gps.connected) && (connectionStatus.data.connected)){
-     
-                
-    }
-    
-    
-    // For tests /////////////////////////
-    
-    myTimer+=1; 
-    label2.set("text", myTimer.toString())
-    //////////////////////////////////////
-}*/
-
-
 function onDeviceOffline(){
-	console.log('onDeviceOffline - '+Math.floor(Date.now() / 1000).toString());
     connectionStatus.data.connected = false;
     dataLabel.set("text", "ინტერნეტ კავშირი: გამორთული");
     dataLabel.set("textColor", "#d02e2e");
 }
 
 function onDeviceOnline(){    
-	console.log('onDeviceOnline - '+Math.floor(Date.now() / 1000).toString());
     connectionStatus.data.connected = true;
     dataLabel.set("text", "ინტერნეტ კავშირი: OK");
     dataLabel.set("textColor", "#2edc5f");    
@@ -445,14 +419,15 @@ function onDeviceOnline(){
 
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
 var onSuccess = function(position){
-	console.log('onSuccess - '+Math.floor(Date.now() / 1000).toString());
+	
 	var currentTime = Math.floor(Date.now() / 1000);
 	
     connectionStatus.gps.lat = position.coords.latitude;
     connectionStatus.gps.lng = position.coords.longitude;
+    connectionStatus.gps.heading = position.coords.heading;
     connectionStatus.gps.connected = true;
 	
-	if(currentTime-lastCoordTime>GPSsendTimeOut){
+	if(currentTime - lastCoordTime > GPSsendTimeOut){
 		lastCoordTime = currentTime;
 		sendStatus("", connectionStatus.gps.lat, connectionStatus.gps.lng, function(result){});
 	}
@@ -470,8 +445,6 @@ function onError(error){
     /////////////////////// Code 2 - GPS off, Code 3 - Timeout  /////////////////////
     
     if (error.code == 2){
-		console.log('onError 2 - '+Math.floor(Date.now() / 1000).toString());
-		//setTimeout(gpsReq, 5000);
         connectionStatus.gps.lat = "--";
         connectionStatus.gps.lng = "--";
         connectionStatus.gps.connected = false;
@@ -483,7 +456,6 @@ function onError(error){
         label2.set("text", connectionStatus.gps.reason + " --- " + myTimer);
     }
     else {
-		console.log('onError else - '+Math.floor(Date.now() / 1000).toString());
         connectionStatus.gps.lat = "--";
         connectionStatus.gps.lng = "--";
         connectionStatus.gps.connected = false;
