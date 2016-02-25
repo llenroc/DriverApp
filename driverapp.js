@@ -27,7 +27,6 @@ var connectionStatus = {
 
 var xhr = new tabris.XMLHttpRequest();
 
-//For GPS . https://github.com/apache/cordova-plugin-geolocation
 var watchID = null;
 
 
@@ -111,14 +110,14 @@ var label2 = tabris.create("TextView", {
     textColor : "#fff",
     text : "count",
   layoutData: {centerX: 0, top: "#compositeGPSData 10"}
-}).appendTo(mainPage);
+}).appendTo(updatePage);
 
 var testLabel = tabris.create("TextView", {
   font: "25px",
     textColor : "#fff",
     text : "სტატუსი",
   layoutData: {centerX: 0, top: [label2, 20]}
-}).appendTo(mainPage);
+}).appendTo(updatePage);
 
 
 // Car ID holder widget /////////////////////////////////////////////////////////////////////////////
