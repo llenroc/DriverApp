@@ -17,7 +17,7 @@ var colorDimmed = "#858383";
 
 var appURL = "http://51.254.206.31/taxi/insert_db_carinfo.php";
 
-// Curent car status. Set to "Free" (1) on start /////////////////////////
+// Curent car status. Set to "OffDuty" (5) on start ////////////////////////
 var carStatus = 5;
 
 var connectionStatus = {
@@ -300,7 +300,6 @@ tabris.app.on("backnavigation", function(app, options) {
     }
 });
 
-
 // Calclulate widget dimentions according to device scree size ////////////////////////////////////////////////
 function screenWidth(x){
     var screenWidth = window.screen.width;
@@ -311,7 +310,6 @@ function screenHeight(x){
     var screenHeight = window.screen.height;
     return Math.round(screenHeight / x);
 }
-
 
 tabris.device.on("change:orientation", function(device, orientation) {
 
@@ -421,9 +419,8 @@ var onSuccess = function(position){
 		sendStatus("", connectionStatus.gps.lat, connectionStatus.gps.lng, function(result){});
 	}
 
-	GPSlabel.set("textColor", "#2edc5f");
+	  GPSlabel.set("textColor", "#2edc5f");
     GPSlabel.set("text", "GPS კავშირი : OK");
-
     label2.set("text", connectionStatus.gps.lat + " | " + connectionStatus.gps.lng);
 };
 
@@ -454,7 +451,6 @@ function onError(error){
         label2.set("text", connectionStatus.gps.reason + " --- " + myTimer);
     }
 }
-
 
 // Check initial data connection
 checkDataConnection();
