@@ -284,7 +284,7 @@ tabris.app.on("backnavigation", function(app, options) {
                     sendStatus(5,"","",function (result){
                         if (result) {
                             //startPage.open();
-                            page.close();
+                            tabris.ui.get("activePage").close();
                             options.preventDefault = false;
                             tabris.ui.find(".statusBtns").set("opacity", 0.5);
                             tabris.ui.find(".statusBtns").set("font", "16px");
