@@ -275,9 +275,7 @@ function animateObject (myObject){
 tabris.app.on("backnavigation", function(app, options) {
 
     if (tabris.ui.get("activePage")!= startPage) {
-
         options.preventDefault = true;
-
         navigator.notification.confirm(
             'გსურთ დაასრულოთ მუშაობა?',
             function(buttonIndex) {
@@ -286,7 +284,7 @@ tabris.app.on("backnavigation", function(app, options) {
                     sendStatus(5,"","",function (result){
                         if (result) {
                             //startPage.open();
-                            //page.close();
+                            page.close();
                             options.preventDefault = false;
                             tabris.ui.find(".statusBtns").set("opacity", 0.5);
                             tabris.ui.find(".statusBtns").set("font", "16px");
