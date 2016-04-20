@@ -26,12 +26,10 @@ var connectionStatus = {
 };
 
 var xhr = new tabris.XMLHttpRequest();
-
 var watchID = null;
 
 // On Ready //////////////////////////////////////////////////////////////
 document.addEventListener("deviceready", onDeviceReady, false);
-
 
 function onDeviceReady(){
     window.plugins.insomnia.keepAwake();
@@ -39,7 +37,6 @@ function onDeviceReady(){
     document.addEventListener("offline", onDeviceOffline, false);
     document.addEventListener("online", onDeviceOnline, false);
 }
-
 
 // Check data connection on app startup. Listeners are not triggered on startup
 function checkDataConnection(){
@@ -110,30 +107,30 @@ var label2 = tabris.create("TextView", {
 
 var testLabel = tabris.create("TextView", {
   font: "25px",
-    textColor : "#fff",
-    text : "სტატუსი",
+  textColor : "#fff",
+  text : "სტატუსი",
   layoutData: {centerX: 0, top: [label2, 20]}
 }).appendTo(updatePage);
 
 
 // Car ID holder widget /////////////////////////////////////////////////////////////////////////////
 var compositeCarID = tabris.create("Composite", {
-  	layoutData: {top: 0, width : screenWidth(1), height: screenHeight(9), centerX: 0},
+  layoutData: {top: 0, width : screenWidth(1), height: screenHeight(9), centerX: 0},
 	id : "compositeCarID",
  	background: "#777"
 }).appendTo(mainPage);
 
 var compositeCarIDInner = tabris.create("Composite", {
-  	layoutData: {top: 1, left : 1, right : 1 , bottom: 1},
+  layoutData: {top: 1, left : 1, right : 1 , bottom: 1},
  	background: "#262626"
 }).appendTo(compositeCarID);
 
 var carIDLabel = tabris.create("TextView",{
-    id : "carIDLabel",
-    font : fontHeader,
-    textColor : "#fff",
-    text : "#",
-    layoutData : {top : 0, centerX: 0}
+  id : "carIDLabel",
+  font : fontHeader,
+  textColor : "#fff",
+  text : "#",
+  layoutData : {top : 0, centerX: 0}
 }).appendTo(compositeCarIDInner);
 
 // End of Car ID holder widget ///////////////////////////////////////////////////////////////////////
@@ -228,31 +225,23 @@ settingsPage.apply({
 
 
 // Event binding ///////////////////////////////////////////////////////////////////////////////////////////////
-
 function sendStatus(status, lat, lng, callback){
-
     var s = appURL + "?key=" + masterKey + "&carn=" + carID + "&status=" + status + "&lat=" + lat + "&lng=" + lng;
-
         xhr.open("GET", s);
         xhr.send();
-
         xhr.onreadystatechange = function() {
-
             if(xhr.readyState === xhr.DONE) {
                 console.log('xhr.DONE | Status: '+xhr.status.toString()+' - '+Math.floor(Date.now() / 1000).toString());
                 if(xhr.status === 200) {
-
                     var x = JSON.parse(xhr.responseText);
                     testLabel.set("text", x.result);
-                    callback (true);
-
+                    callback(true);
                 } else {
                     testLabel.set("text", xhr.status);
                 }
             }
             buttonClicked = false;
         }//xhr.onreadystatechange
-
     animateObject(testLabel);
 }
 
@@ -273,7 +262,6 @@ function animateObject (myObject){
 
 //Override native back button action
 tabris.app.on("backnavigation", function(app, options) {
-
     if (tabris.ui.get("activePage")!= startPage) {
         options.preventDefault = true;
         navigator.notification.confirm(
@@ -283,8 +271,8 @@ tabris.app.on("backnavigation", function(app, options) {
                     //If XMLHTTP request successful callback (status set to 5=offDuty) then go to start page.
                     sendStatus(5,"","",function (result){
                         if (result) {
-                            //startPage.open();
-                            tabris.ui.get("activePage").close();
+                            startPage.open();
+                            //tabris.ui.get("activePage").close();
                             options.preventDefault = false;
                             tabris.ui.find(".statusBtns").set("opacity", 0.5);
                             tabris.ui.find(".statusBtns").set("font", "16px");
