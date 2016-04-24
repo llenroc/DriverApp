@@ -30,7 +30,7 @@ var watchID = null;
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady(){
-    //window.plugins.insomnia.keepAwake();
+    window.plugins.insomnia.keepAwake();
     // Data connection listeners
     document.addEventListener("offline", onDeviceOffline, false);
     document.addEventListener("online", onDeviceOnline, false);
