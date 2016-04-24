@@ -256,6 +256,7 @@ function createSettingsPage() {
           carID =  carIDInput.get("text");
           myStorage.setItem("CarID",carID);
           carIDLabel.set("text", "#" + carID);
+          gpsReq();
           mainPage.open();
       }
       else{
@@ -364,8 +365,8 @@ tabris.app.on("backnavigation", function(app, options) {
                             options.preventDefault = false;
                             tabris.ui.find(".statusBtns").set("opacity", 0.5);
                             tabris.ui.find(".statusBtns").set("font", "16px");
+                            connectionStatus.gps.connected = false;
                             GPSLocation.clearWatch(watchID);
-                            //clearInterval(refreshIntervalId);
                         }
                     });
                 }
