@@ -15,6 +15,7 @@ var linkColor = "#70d5ff";
 var infoColor = "#fff070";
 
 var appURL = "http://51.254.206.31/taxi/insert_db_carinfo.php";
+var updateURL = "";
 
 //var myTimer = 0;
 var carID;
@@ -29,6 +30,14 @@ var connectionStatus = {
 
 var xhr = new tabris.XMLHttpRequest();
 var watchID = null;
+
+var loadVersionJSON = require("./about.json");
+
+//Check for new update patch. To be run on app startup
+function checkUpdate(){
+
+}
+
 
 // On Ready //////////////////////////////////////////////////////////////
 document.addEventListener("deviceready", onDeviceReady, false);
@@ -294,7 +303,7 @@ function createHelpPage(){
       textColor : "#fff",
       markupEnabled: true,
       text : "232222 ტაქსის ეკიპაჟისთვის <p/>" +
-      "აპლიკაციის მუშაობისთვის (მონიტორინგი და გეოლოკაცია) საჭიროა GPS და ინტერნეტ კავშირი",
+      "აპლიკაციის მუშაობისთვის საჭიროა GPS და ინტერნეტ კავშირი",
       layoutData: {
         left: MARGIN_SMALL,
         top: MARGIN_SMALL
@@ -318,6 +327,8 @@ function createHelpPage(){
         top: [versionText, 15]
       }
     }).appendTo(Page);
+
+    linkTextView.set("text", loadVersionJSON.version);
 
     return Page;
 }
