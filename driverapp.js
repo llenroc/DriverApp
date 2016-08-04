@@ -14,8 +14,8 @@ var startpageBgColor = "#000";
 var linkColor = "#70d5ff";
 var infoColor = "#fff070";
 
-var appURL = "http://51.254.206.31/taxi/insert_db_carinfo.php";
-var updateURL = "";
+var appURL = "http://taxi232222.com/taxi/insert_db_carinfo.php";
+var patchUrl = "http://taxi232222.com/taxi/patch/";
 
 //var myTimer = 0;
 var carID;
@@ -29,13 +29,56 @@ var connectionStatus = {
 };
 
 var xhr = new tabris.XMLHttpRequest();
+var patchAvail;
 var watchID = null;
+var helpPage;
+var appAbout = require("./about.json");
 
-var loadVersionJSON = require("./about.json");
 
-//Check for new update patch. To be run on app startup
+//Check for new update patch. Run on app start
 function checkUpdate(){
+    var patch = new tabris.XMLHttpRequest();
+    var s = patchUrl + "patch.json";
+    patch.open("GET", s);
+    patch.send();
 
+    patch.onreadystatechange = function() {
+        if(patch.readyState === patch.DONE) {
+            if(patch.status === 200) {
+              patchAvail = JSON.parse(patch.responseText);
+              var comp = compare(appAbout.version, patchAvail.version);
+
+              console.log(appAbout.version);
+              console.log(patchAvail.version);
+
+              if(comp < 0 ){
+                var msg = "ნაპოვნია ახალი ვერსია - "+ patchAvail.version + ". გადმოვწეროთ?";
+                //Dialogue box before update
+                 navigator.notification.confirm(msg,
+                     function(buttonIndex) {
+                         if (buttonIndex == 1) {
+                            appUpdate();
+                             return true;
+                         }
+                     }, 'პროგრამის განახლება', ['დიახ','არა']
+                 )//End of Dialogue
+              }//End of comparison
+            }
+        }
+    }//End of XLM
+}
+
+function appUpdate(){
+  var s = patchUrl + "src.zip";
+  tabris.app.installPatch(s, function(error, patch) {
+    if (error) {
+      // show error dialog
+      console.log("error");
+    } else {
+      // confirm reload
+      tabris.app.reload();
+    }
+  });
 }
 
 
@@ -43,7 +86,7 @@ function checkUpdate(){
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady(){
-    window.plugins.insomnia.keepAwake();
+    //window.plugins.insomnia.keepAwake();
     // Data connection listeners
     document.addEventListener("offline", onDeviceOffline, false);
     document.addEventListener("online", onDeviceOnline, false);
@@ -73,7 +116,8 @@ var aboutImg = new tabris.ImageView({
   image: "res/images/xhdpi/ic_help.png",
   layoutData: {bottom : MARGIN_SMALL, right : MARGIN_SMALL + 55}
 }).appendTo(startPage).on("tap", function(){
-  createHelpPage().open();
+  helpPage = createHelpPage();
+  helpPage.open();
 });
 
 var StartJob = tabris.create("Button", {
@@ -87,7 +131,7 @@ var StartJob = tabris.create("Button", {
     textColor : "#000",
     font : fontMed,
     text: "მუშაობის დაწყება"
-}).appendTo(startPage).on("select", function(){ startJobCheck();});
+}).appendTo(startPage).on("select", function(){startJobCheck();});
 
 // End os startPage Page UI /////////////////////////////////////////////////////////////
 function startJobCheck(){
@@ -312,23 +356,14 @@ function createHelpPage(){
 
     var versionText = tabris.create("TextView", {
       textColor : infoColor,
-      text : "აპლიკაციის ვერსია -  v2.0.1",
+      text : "აპლიკაციის ვერსია -",
       layoutData: {
         left: MARGIN_SMALL,
         top: [infoText, 15]
       }
     }).appendTo(Page);
 
-    var linkTextView = new tabris.TextView({
-      text: "განახლება",
-      textColor: linkColor,
-      layoutData: {
-        left: MARGIN_SMALL,
-        top: [versionText, 15]
-      }
-    }).appendTo(Page);
-
-    linkTextView.set("text", loadVersionJSON.version);
+    versionText.set("text", "აპლიკაციის ვერსია - " + appAbout.version);
 
     return Page;
 }
@@ -341,7 +376,7 @@ function sendStatus(status, lat, lng, callback){
         xhr.send();
         xhr.onreadystatechange = function() {
             if(xhr.readyState === xhr.DONE) {
-                console.log('xhr.DONE | Status: '+xhr.status.toString()+' - '+Math.floor(Date.now() / 1000).toString());
+                //console.log('xhr.DONE | Status: '+xhr.status.toString()+' - '+Math.floor(Date.now()/1000).toString());
                 if(xhr.status === 200) {
                     var x = JSON.parse(xhr.responseText);
                     feedbackLabel.set("text", x.result);
@@ -436,7 +471,7 @@ var GPSsendTimeOut = 10;
 
 // GPS position fetch loop ////////////////////////////////////////////////////////////////////////////
 function gpsReq(){
-	watchID = GPSLocation.watchPosition(onSuccess, onError, {maximumAge: 5000, timeout: 5000});
+	//watchID = GPSLocation.watchPosition(onSuccess, onError, {maximumAge: 5000, timeout: 5000});
 }
 
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
@@ -499,6 +534,35 @@ function onDeviceOnline(){
     dataLabel.set("textColor", "#2edc5f");
 }
 
+//Version comparison
+function compare(a, b) {
+    if (a === b) { return 0; }
+    var a_components = a.split(".");
+    var b_components = b.split(".");
+    var len = Math.min(a_components.length, b_components.length);
+    // loop while the components are equal
+    for (var i = 0; i < len; i++) {
+        // A bigger than B
+        if (parseInt(a_components[i]) > parseInt(b_components[i])) {
+            return 1;
+        }
+        // B bigger than A
+        if (parseInt(a_components[i]) < parseInt(b_components[i])) {
+            return -1;
+        }
+    }
+    // If one's a prefix of the other, the longer one is greater.
+    if (a_components.length > b_components.length) {
+        return 1;
+    }
+    if (a_components.length < b_components.length) {
+        return -1;
+    }
+    // Otherwise they are the same.
+    return 0;
+}
+
 checkDataConnection(); // Check  data connection
 carID = localStorage.getItem("CarID");
 startPage.open();
+checkUpdate();
