@@ -86,7 +86,7 @@ function appUpdate(){
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady(){
-    //window.plugins.insomnia.keepAwake();
+    window.plugins.insomnia.keepAwake();
     // Data connection listeners
     document.addEventListener("offline", onDeviceOffline, false);
     document.addEventListener("online", onDeviceOnline, false);
@@ -471,7 +471,7 @@ var GPSsendTimeOut = 10;
 
 // GPS position fetch loop ////////////////////////////////////////////////////////////////////////////
 function gpsReq(){
-	//watchID = GPSLocation.watchPosition(onSuccess, onError, {maximumAge: 5000, timeout: 5000});
+	watchID = GPSLocation.watchPosition(onSuccess, onError, {maximumAge: 5000, timeout: 5000});
 }
 
 // onSuccess Callback. This method accepts a Position object, which contains the current GPS coordinates
